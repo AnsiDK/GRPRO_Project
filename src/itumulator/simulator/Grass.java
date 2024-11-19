@@ -9,13 +9,13 @@ public class Grass implements NonBlocking, Actor {
     World world;
     Random r = new Random();
 
-    public Grass () {
+    public Grass (World world) {
         super();
+        this.world = world;
     }
 
     @Override
     public void act (World world) {
-        this.world = world;
 
         if (r.nextInt(10) == 9) {
             spread(world.getCurrentLocation());
@@ -35,13 +35,13 @@ public class Grass implements NonBlocking, Actor {
         }
 
         if (i != list.size()) {
-            Location l = list.get(r.nextInt(list.size()-1));
+            Location l = list.get(r.nextInt(list.size()));
 
             while (world.containsNonBlocking(l)) {
                 l = list.get(r.nextInt(list.size()-1));
             }
 
-            world.setTile(l, new Grass());
+            world.setTile(l, new Grass(world));
         }
     }
 }
