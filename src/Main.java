@@ -12,7 +12,6 @@ public class Main {
         Program p = new Program(size, 800, 75);
 
         World w = p.getWorld();
-
         //hej
 
         //test
