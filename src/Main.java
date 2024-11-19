@@ -14,6 +14,9 @@ public class Main {
         World w = p.getWorld();
 
         //hej
+
+        //test
+
         p.show();
     }
 }
