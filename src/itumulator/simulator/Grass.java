@@ -1,6 +1,7 @@
 package itumulator.simulator;
-import itumulator.world.*;
 
+import itumulator.world.*;
+import Main.Main;
 import java.util.*;
 
 
@@ -16,8 +17,10 @@ public class Grass implements NonBlocking, Actor {
 
     @Override
     public void act (World world) {
-
-        if (r.nextInt(10) == 9) {
+        if (Main.getGrass() == Main.getSize() * Main.getSize()) {
+            System.out.println("There is no room for more grass");
+        }
+        if (r.nextInt(10) == 9 && Main.getGrass() != (Main.getSize() * Main.getSize())) {
             spread(world.getCurrentLocation());
         }
     }
@@ -38,10 +41,12 @@ public class Grass implements NonBlocking, Actor {
             Location l = list.get(r.nextInt(list.size()));
 
             while (world.containsNonBlocking(l)) {
-                l = list.get(r.nextInt(list.size()-1));
+                l = list.get(r.nextInt(list.size()));
             }
 
             world.setTile(l, new Grass(world));
+            int grass = Main.getGrass();
+            Main.setGrass(grass + 1);
         }
     }
 }
