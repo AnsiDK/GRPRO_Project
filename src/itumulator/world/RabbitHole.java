@@ -10,7 +10,7 @@ public class RabbitHole implements NonBlocking {
     RabbitHole otherExit;
     Random r = new Random();
 
-    public RabbitHole(Location location) {
+    public RabbitHole() {
         super();
         this.location = location;
         rabbits = new ArrayList<>();
@@ -34,5 +34,9 @@ public class RabbitHole implements NonBlocking {
 
     public boolean isFirst(Rabbit rabbit) {
         return rabbits.get(0) == rabbit;
+    }
+
+    public int rabbitsInHole() {
+        return rabbits.size();
     }
 }

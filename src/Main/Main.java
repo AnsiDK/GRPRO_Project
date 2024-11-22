@@ -18,7 +18,7 @@ import java.util.*;
 public class Main {
     private static int nonBlockingObjects = 0;
     private static int size;
-    static Random r = new Random();
+    final static Random r = new Random();
 
     public static void main(String[] args) {
         Map<String, String> input = fileImport("week-1/t1-1a.txt");
@@ -40,24 +40,7 @@ public class Main {
 
         // Plant the grass
         for (String name : input.keySet()) {
-            if (name.equals("grass")) {
-                if (input.get(name).contains("/")) {
-                    List<String> temp = new ArrayList<>(List.of(input.get(name).split("/")));
-
-                    int lower = Integer.parseInt(temp.getFirst());
-                    int upper = Integer.parseInt(temp.getLast());
-                    int amount = r.nextInt(lower, upper);
-
-                    for (int i = 0; i < amount; i++) {
-                        plantGrass(w);
-                    }
-
-                } else {
-                    for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
-                        plantGrass(w);
-                    }
-                }
-            }
+            spawnStuff(name, input, w);
         }
 
         DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
@@ -77,6 +60,8 @@ public class Main {
             }
             w.setTile(l, new Rabbit());
         }
+        //Location l = new Location(2, 2);
+        //w.setTile(l, new Grass(w));
         //Test * * * * *
 
         p.show();
@@ -109,9 +94,75 @@ public class Main {
         }
     }
 
-    public static void plantGrass(World w) {
-        Random r = new Random();
+    public static void spawnStuff(String name, Map<String, String> input, World w) {
+        try {
+            if (input.get(name).contains("/")) {
+                List<String> temp = new ArrayList<>(List.of(input.get(name).split("/")));
 
+                int lower = Integer.parseInt(temp.getFirst());
+                int upper = Integer.parseInt(temp.getLast());
+                int amount = r.nextInt(lower, upper);
+
+                switch (name) {
+                    case "grass" -> {
+                        for (int i = 0; i < amount; i++) {
+                            spawnGrass(w);
+                        }
+                    }
+                    case "rabbit" -> {
+                        for (int i = 0; i < amount; i++) {
+                            spawnRabbit(w);
+                        }
+                    }
+                    case "burrow" -> {
+                        for (int i = 0; i < amount; i++) {
+                            spawnHole(w);
+                        }
+                    }
+                }
+
+            } else {
+                switch (name) {
+                    case "grass" -> {
+                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                            spawnGrass(w);
+                        }
+                    }
+                    case "rabbit" -> {
+                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                            spawnRabbit(w);
+                        }
+                    }
+                    case "burrow" -> {
+                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                            spawnHole(w);
+                        }
+                    }
+                }
+            }
+        } catch (NullPointerException _) {
+
+        }
+    }
+
+    // Spawn some Grass
+    public static void spawnGrass(World w) {
+        w.setTile(nonBlockingLocation(w), new Grass(w));
+    }
+
+    // Spawn a rabbit
+    public static void spawnRabbit(World w) {
+        w.setTile(blockingLocation(w), new Rabbit());
+    }
+
+    // Spawn a RabbitHole
+    public static void spawnHole(World w) {
+        Location l = nonBlockingLocation(w);
+        w.setTile(l, new RabbitHole());
+    }
+
+    // Find a location for a NonBlocking object
+    public static Location nonBlockingLocation(World w) {
         Location l = new Location(r.nextInt(size), r.nextInt(size));
 
         while (w.containsNonBlocking(l)) {
@@ -119,7 +170,19 @@ public class Main {
         }
 
         nonBlockingObjects++;
-        w.setTile(l, new Grass(w));
+        return l;
+    }
+
+    // Find a location for a Blocking object
+    public static Location blockingLocation(World w) {
+        Location l = new Location(r.nextInt(size), r.nextInt(size));
+
+        while (!w.isTileEmpty(l)) {
+            l = new Location(r.nextInt(size), r.nextInt(size));
+        }
+
+        nonBlockingObjects++;
+        return l;
     }
 
     public static int getNonBlockingObjects() {          //Get the amount of grass in the world
