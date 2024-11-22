@@ -17,7 +17,7 @@ public class Grass implements NonBlocking, Actor {
 
     @Override
     public void act (World world) {
-        if (r.nextInt( 2) == 0 && Main.getGrass() != (Main.getSize() * Main.getSize())) {
+        if (r.nextInt( 2) == 0 && Main.getNonBlockingObjects() != (Main.getSize() * Main.getSize())) {
             spread(world.getCurrentLocation());
         }
     }
@@ -42,8 +42,8 @@ public class Grass implements NonBlocking, Actor {
             }
 
             world.setTile(l, new Grass(world));
-            int grass = Main.getGrass();
-            Main.setGrass(grass + 1);
+            int grass = Main.getNonBlockingObjects();
+            Main.setNonBlockingObjects(grass + 1);
         }
     }
 }

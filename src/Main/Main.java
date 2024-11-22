@@ -16,7 +16,7 @@ import java.util.*;
 
 
 public class Main {
-    private static int allGrass = 0;
+    private static int nonBlockingObjects = 0;
     private static int size;
     static Random r = new Random();
 
@@ -29,7 +29,7 @@ public class Main {
                 //size = Integer.parseInt(name);
 
                 //TestSize
-                size = 10;
+                size = 5;
                 break;
             }
         }
@@ -118,16 +118,16 @@ public class Main {
             l = new Location(r.nextInt(size), r.nextInt(size));
         }
 
-        allGrass++;
+        nonBlockingObjects++;
         w.setTile(l, new Grass(w));
     }
 
-    public static int getGrass() {          //Get the amount of grass in the world
-        return allGrass;
+    public static int getNonBlockingObjects() {          //Get the amount of grass in the world
+        return nonBlockingObjects;
     }
 
-    public static void setGrass(int value) {           //"Change" the amount of grass in the world
-        allGrass = value;
+    public static void setNonBlockingObjects(int value) {           //"Change" the amount of grass in the world
+        nonBlockingObjects = value;
     }
 
     public static int getSize() {           //"Change" the amount of grass in the world

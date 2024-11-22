@@ -10,32 +10,38 @@ import java.util.*;
 
 public class Rabbit implements Actor{
 
-    int age;
-    int stepsLived;
-    int eatenGrass;
-    int energy;                         //We are missing an actual use for energy
-    public RabbitHole hole;
-    Random random = new Random();
-    World world;
-    Boolean isOnMap = true;
+    private static final int maxHoleDistance = 5;
+    private static final int energyDecay = 5;
+    private static final int ageToGrow = 2;
+    private static final int stepsPerDay = 20;
+    private static final int grassNeededToDigHole = 3;
+
+    private int age;
+    private int stepsLived;
+    private int eatenGrass;
+    private int energy;                         //We are missing an actual use for energy
+    private RabbitHole hole;
+    private Boolean isOnMap = true;
+    private final Random random = new Random();
 
     public Rabbit() {
         super();
-        age = 0; // 0 years old
-        eatenGrass = 0;
-        stepsLived = 0;
-        energy = 100;
+        initializeRabbit(null, true);
     }
 
     //Overloaded Rabbit function for small rabbits so that they come "attached" to a hole
     public Rabbit(RabbitHole hole) {
         super();
+        initializeRabbit(hole, false);
+    }
+
+    private void initializeRabbit(RabbitHole hole, boolean isOnMap) {
         age = 0; // 0 years old
         eatenGrass = 0;
         stepsLived = 0;
         energy = 100;
         this.hole = hole;
-        this.isOnMap = false;
+        this.isOnMap = isOnMap;
     }
 
     @Override
@@ -60,7 +66,6 @@ public class Rabbit implements Actor{
                 // If rabbit haven't eaten then it dies
                 if (eatenGrass == 0) {
                     System.out.println("Rabbit died of hunger");
-                    isOnMap = false;
                     hole = null;
                     world.delete(this);
                 }
@@ -105,7 +110,7 @@ public class Rabbit implements Actor{
     }
 
     void eatGrass(World world) {
-        Main.setGrass(Main.getGrass() - 1);
+        Main.setNonBlockingObjects(Main.getNonBlockingObjects() - 1);
         eatenGrass ++;
         world.delete(world.getNonBlocking(world.getLocation(this)));
     }

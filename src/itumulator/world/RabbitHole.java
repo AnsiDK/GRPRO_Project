@@ -7,7 +7,8 @@ import java.util.*;
 public class RabbitHole implements NonBlocking {
     Location location;
     List<Rabbit> rabbits;
-    boolean rabbitExiting;
+    RabbitHole otherExit;
+    Random r = new Random();
 
     public RabbitHole(Location location) {
         super();
@@ -22,7 +23,9 @@ public class RabbitHole implements NonBlocking {
     public void addRabbit(Rabbit rabbit) {
         rabbits.add(rabbit);
 
-        //Add code here that makes a different entrance if there is above a certain number of rabbits in a given hole
+        if (rabbits.size() > 4) {
+            //Super awesome kode der tilføjer en anden udgang til et hul
+        }
     }
 
     public void removeRabbit(Rabbit rabbit) {
