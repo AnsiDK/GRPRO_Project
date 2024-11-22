@@ -5,7 +5,9 @@ import java.awt.Color;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
 import itumulator.simulator.Grass;
+import itumulator.simulator.Rabbit;
 import itumulator.world.Location;
+import itumulator.world.RabbitHole;
 import itumulator.world.World;
 
 import java.io.File;
@@ -16,21 +18,18 @@ import java.util.*;
 public class Main {
     private static int allGrass = 0;
     private static int size;
+    static Random r = new Random();
 
     public static void main(String[] args) {
-        size = 5;
-
-        Random r = new Random();
-
-
-
-
         Map<String, String> input = fileImport("week-1/t1-1a.txt");
 
         // Find size of world
         for (String name : input.keySet()) {
             if (input.get(name) == null) {
-                size = Integer.parseInt(name);
+                //size = Integer.parseInt(name);
+
+                //TestSize
+                size = 10;
                 break;
             }
         }
@@ -61,14 +60,28 @@ public class Main {
             }
         }
 
+        DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
+        p.setDisplayInformation(Grass.class, grassDi);
 
+        DisplayInformation rabbitDi = new DisplayInformation(Color.blue, "rabbit-small");
+        p.setDisplayInformation(Rabbit.class, rabbitDi);
 
-        DisplayInformation di = new DisplayInformation(Color.green, "grass");
-        p.setDisplayInformation(Grass.class, di);
+        DisplayInformation rabbitHoleDi = new DisplayInformation(Color.yellow, "hole");
+        p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
+
+        //Rabbit and Rabbithole test
+        for (int i = 0; i < 3; i++) {
+            Location l = new Location(r.nextInt(size), r.nextInt(size));
+            while (w.contains(Rabbit.class)) {
+                l = new Location(r.nextInt(size), r.nextInt(size));
+            }
+            w.setTile(l, new Rabbit());
+        }
+        //Test * * * * *
 
         p.show();
 
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 1000; i++) {
             p.simulate();
         }
     }

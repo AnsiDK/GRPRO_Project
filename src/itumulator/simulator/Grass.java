@@ -17,10 +17,7 @@ public class Grass implements NonBlocking, Actor {
 
     @Override
     public void act (World world) {
-        if (Main.getGrass() == Main.getSize() * Main.getSize()) {
-            System.out.println("There is no room for more grass");
-        }
-        if (r.nextInt(10) == 9 && Main.getGrass() != (Main.getSize() * Main.getSize())) {
+        if (r.nextInt( 2) == 0 && Main.getGrass() != (Main.getSize() * Main.getSize())) {
             spread(world.getCurrentLocation());
         }
     }
