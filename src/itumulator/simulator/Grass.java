@@ -2,6 +2,8 @@ package itumulator.simulator;
 
 import itumulator.world.*;
 import Main.Main;
+import methodHelpers.RandomLocationHelper;
+
 import java.util.*;
 
 

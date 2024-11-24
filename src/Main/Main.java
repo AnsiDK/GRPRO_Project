@@ -9,7 +9,7 @@ import itumulator.simulator.Rabbit;
 import itumulator.world.Location;
 import itumulator.world.RabbitHole;
 import itumulator.world.World;
-
+import methodHelpers.RandomLocationHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -19,24 +19,28 @@ public class Main {
     private static int nonBlockingObjects = 0;
     private static int size;
     final static Random r = new Random();
+    static RandomLocationHelper rLoc;
+    static World w;
 
     public static void main(String[] args) {
-        Map<String, String> input = fileImport("week-1/t1-1a.txt");
+        Map<String, String> input = fileImport();
 
         // Find size of world
         for (String name : input.keySet()) {
             if (input.get(name) == null) {
-                //size = Integer.parseInt(name);
+                size = Integer.parseInt(name);
 
                 //TestSize
-                size = 5;
+                //size = 20;
                 break;
             }
         }
 
         // Make world
         Program p = new Program(size, 800, 1000);
-        World w = p.getWorld();
+        w = p.getWorld();
+        //Initialize RandomLocationHelper
+        rLoc = new RandomLocationHelper(w);
 
         // Plant the grass
         for (String name : input.keySet()) {
@@ -53,15 +57,10 @@ public class Main {
         p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
         //Rabbit and Rabbithole test
-        for (int i = 0; i < 3; i++) {
-            Location l = new Location(r.nextInt(size), r.nextInt(size));
-            while (w.contains(Rabbit.class)) {
-                l = new Location(r.nextInt(size), r.nextInt(size));
-            }
-            w.setTile(l, new Rabbit());
-        }
-        //Location l = new Location(2, 2);
-        //w.setTile(l, new Grass(w));
+        // for (int i = 0; i < 5; i++) {
+        //    Location l = rLoc.getRandomLocation();
+        //    w.setTile(l, new Rabbit(w));
+        //}
         //Test * * * * *
 
         p.show();
@@ -71,9 +70,9 @@ public class Main {
         }
     }
 
-    static Map<String, String> fileImport(String fileName) {
+    static Map<String, String> fileImport() {
 
-        File file = new File(fileName);
+        File file = new File("week-1/t1-1a.txt");
 
         try {
             Scanner sc = new Scanner(file);
@@ -89,7 +88,7 @@ public class Main {
             }
             return map;
         } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + fileName);
+            System.out.println("File not found: " + "week-1/t1-1a.txt");
             return null;
         }
     }
@@ -106,17 +105,17 @@ public class Main {
                 switch (name) {
                     case "grass" -> {
                         for (int i = 0; i < amount; i++) {
-                            spawnGrass(w);
+                            spawnGrass();
                         }
                     }
                     case "rabbit" -> {
                         for (int i = 0; i < amount; i++) {
-                            spawnRabbit(w);
+                            spawnRabbit();
                         }
                     }
                     case "burrow" -> {
                         for (int i = 0; i < amount; i++) {
-                            spawnHole(w);
+                            spawnHole();
                         }
                     }
                 }
@@ -125,17 +124,17 @@ public class Main {
                 switch (name) {
                     case "grass" -> {
                         for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
-                            spawnGrass(w);
+                            spawnGrass();
                         }
                     }
                     case "rabbit" -> {
                         for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
-                            spawnRabbit(w);
+                            spawnRabbit();
                         }
                     }
                     case "burrow" -> {
                         for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
-                            spawnHole(w);
+                            spawnHole();
                         }
                     }
                 }
@@ -146,23 +145,23 @@ public class Main {
     }
 
     // Spawn some Grass
-    public static void spawnGrass(World w) {
-        w.setTile(nonBlockingLocation(w), new Grass(w));
+    public static void spawnGrass() {
+        w.setTile(nonBlockingLocation(), new Grass(w));
     }
 
     // Spawn a rabbit
-    public static void spawnRabbit(World w) {
-        w.setTile(blockingLocation(w), new Rabbit());
+    public static void spawnRabbit() {
+        w.setTile(blockingLocation(), new Rabbit(w));
     }
 
     // Spawn a RabbitHole
-    public static void spawnHole(World w) {
-        Location l = nonBlockingLocation(w);
-        w.setTile(l, new RabbitHole());
+    public static void spawnHole() {
+        Location l = nonBlockingLocation();
+        w.setTile(l, new RabbitHole(w));
     }
 
     // Find a location for a NonBlocking object
-    public static Location nonBlockingLocation(World w) {
+    public static Location nonBlockingLocation() {
         Location l = new Location(r.nextInt(size), r.nextInt(size));
 
         while (w.containsNonBlocking(l)) {
@@ -174,7 +173,7 @@ public class Main {
     }
 
     // Find a location for a Blocking object
-    public static Location blockingLocation(World w) {
+    public static Location blockingLocation() {
         Location l = new Location(r.nextInt(size), r.nextInt(size));
 
         while (!w.isTileEmpty(l)) {

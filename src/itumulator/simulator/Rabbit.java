@@ -4,225 +4,269 @@ import Main.Main;
 import itumulator.world.RabbitHole;
 import itumulator.world.World;
 import itumulator.world.Location;
-
-
+import methodHelpers.TimeManager;
+import methodHelpers.Searcher;
 import java.util.*;
 
 public class Rabbit implements Actor{
 
-    private static final int maxHoleDistance = 5;
-    private static final int energyDecay = 2;
-    private static final int ageToGrow = 2;
-    private static final int stepsPerDay = 20;
-    private static final int grassNeededToDigHole = 3;
-    private static final int initialEnergy = 10;
+    private final Random r = new Random();
+    private Searcher searcher;
+    private TimeManager timeManager;
 
-    private int ageStage;
-    private int stepsLived;
-    private int eatenGrass;
-    private int energy;
-    private RabbitHole hole;
+    private int age = 0;
+    private int stepsLived = 0;
+    private int eatenGrass = 0;
+    private int energy = 10;
+    public RabbitHole hole;
     private Boolean isOnMap = true;
-    private final Random random = new Random();
     private Location target;
     private int targetX;
     private int targetY;
+    private World world;
+    private boolean hasGrown = false;
 
-    public Rabbit() {
+    public Rabbit(World world) {
         super();
-        initializeRabbit(null, true);
+        initializeRabbit(null, true, world);
     }
 
     //Overloaded Rabbit function for small rabbits so that they come "attached" to a hole
-    public Rabbit(RabbitHole hole) {
+    public Rabbit(RabbitHole hole, World world) {
         super();
-        initializeRabbit(hole, false);
+        initializeRabbit(hole, false, world);
     }
 
-    private void initializeRabbit(RabbitHole hole, boolean isOnMap) {
-        ageStage = 0; // 0 years old
-        eatenGrass = 0;
-        stepsLived = 0;
-        energy = initialEnergy;
+    //Initializing a rabbit
+    private void initializeRabbit(RabbitHole hole, boolean isOnMap, World world) {
         this.hole = hole;
         this.isOnMap = isOnMap;
+        this.world = world;
+        searcher = new Searcher(world);
+        timeManager = new TimeManager(this);
     }
 
     @Override
     public void act(World world) {
-        if (world.isDay() && !isOnMap) {
-            if (eatenGrass > 2 && hole.rabbitsInHole() >= 2) {
-                reproduce(world);
+        actAlways();                                //Do this every update
+        if (world.isDay()) { actDay(); }            //Do this during the day
+        else { actNight(); }                        //Do this at night
+    }
+
+    //Always called when acting
+    void actAlways() {
+        updateAge();
+    }
+
+    //Called when acting during day
+    void actDay() {
+        timeManager.updateTime(true);
+
+        if (isOnMap) {
+            Location loc = world.getCurrentLocation();
+            if (eatenGrass == 0 && searcher.isInVicinity(loc, Grass.class, 3) && target == null) {
+                Location l = searcher.searchForObject(Grass.class, loc, 3);
+                setTarget(l);
             }
-            exitHole(world);
-        } else if (isOnMap) {
 
-            // age rabbit
-            stepsLived++;
-
-            // Make the rabbit eat if it is on grass and hasn't eaten
-            if (world.getNonBlocking(world.getLocation(this)) instanceof Grass && eatenGrass == 0) {
-                eatGrass(world);
-            }
-
-            // The rabbit goes towards it's hole when it turns night
-            if (world.isNight()) {
-                // If rabbit haven't eaten then it dies
-                if (eatenGrass == 0) {
-                    System.out.println("Rabbit died of hunger");
-                    hole = null;
-                    world.delete(this);
-                }
-
-                if (hole == null) {
-                    //Mega fed kode der skifter kanines sprite til en der sover
-                }
-
-                //Ellers går kaninen mod sit hul
-                else {
-                    setTarget(world.getLocation(hole));
-                    goToTarget(world);
-                }
-
+            if (target != null) {
+                goTowardsTarget();
             } else {
-                think(world);
+                moveRandomly();
+            }
+
+            if (r.nextInt(eatenGrass + 2) == 0 && searcher.grassAt(world.getLocation(this))) {
+                eatGrass();
             }
         }
 
-        //Rabbit has lived 1 day
-        if (stepsLived % stepsPerDay == 0) {
-            ageStage++;
+        if (!isOnMap) { exitHole(); }
+    }
 
-            if (ageStage == ageToGrow) {
-                grow(world);
+    //Called when acting at night
+    void actNight() {
+        timeManager.updateTime(false);
+
+        if (isOnMap) {
+            if (hole == null && target == null) { findHole(); }
+
+            if (target != null) {
+                goTowardsTarget();
+            } else {
+                moveRandomly();
             }
-            eatenGrass = 0;
         }
     }
 
-    void think(World world) {
-        //Make the rabbit less and less likely to eat grass
-        if (world.getNonBlocking(world.getLocation(this)) instanceof Grass && eatenGrass == random.nextInt(eatenGrass) + 1) {
-            eatGrass(world);
-        } else if (hole == null && eatenGrass > grassNeededToDigHole) {
-            //The rabbit will dig a hole if it has eaten more than 3 grass in one day
-            digHole(world);
-            eatenGrass =- 2;
-        } else {
-            move(world);
-        }
-    }
-
-    void eatGrass(World world) {
+    //The rabbit eats grass
+    void eatGrass() {
         Main.setNonBlockingObjects(Main.getNonBlockingObjects() - 1);
         eatenGrass ++;
         world.delete(world.getNonBlocking(world.getLocation(this)));
     }
 
-    void move(World world) {
-        Set<Location> freeTiles = world.getEmptySurroundingTiles();
-        List<Location> list = new ArrayList<>(freeTiles);
+    //The bunny moves to a random location in its vicinity
+    void moveRandomly() {
+        Set<Location> set = world.getEmptySurroundingTiles();
+        List<Location> list = new ArrayList<>(set);
         if (!list.isEmpty()) {
-            Location loc = list.get(random.nextInt(list.size()));
+            Location loc = list.get(r.nextInt(list.size()));
 
             world.move(this, loc);
-
-            //A rabbit "claims" a rabbit hole if it walks over one and it does'nt already have one
-            if (world.getNonBlocking(loc) instanceof RabbitHole && hole == null) {
-                this.hole = (RabbitHole) world.getNonBlocking(loc);
-            }
         }
     }
 
-    void goToTarget(World world) {
+    //The rabbit goes towards its target
+    void goTowardsTarget() {
         Location start = world.getLocation(this);
-        Location currentBest = start;
-
-        //Find initial distance
-        double initDist = Math.sqrt(Math.pow(targetX - start.getX(), 2)
-                       + Math.pow(targetY - start.getY(), 2));
+        double minDist = searcher.getDistance(start, target);
+        Location bestMove = start;
 
         //Determine the best square for a rabbit to move to
-        Set<Location> Set = world.getEmptySurroundingTiles();
-        for (Location loc : Set) {
+        for (Location neighbor : world.getEmptySurroundingTiles()) {
+            double dist = searcher.getDistance(neighbor, target);
 
-            //Find distance for a given location
-            double distance = Math.sqrt(Math.pow(targetX - loc.getX(), 2)
-                            + Math.pow(targetY - loc.getY(), 2));
-
-            //A closer location has been found
-            if (distance < initDist) {
-                currentBest = loc;
+            if (dist < minDist) {
+                minDist = dist;
+                bestMove = neighbor;
             }
         }
 
-        //Move closer to the hole
-        world.move(this, currentBest);
+        //Move closer to the target
+        world.move(this, bestMove);
 
-        //If the rabbit is at the target
-        if (start.getX() == targetX && start.getY() == targetY) {
-            performAction(world);
+        if (bestMove.equals(target)) {
+            performAction();
+            target = null;
         }
     }
 
-    //Dig a hole at rabbit's location
-    public void digHole(World world) {
-        //Delete whatever is in the way
-        if (world.getNonBlocking(world.getLocation(this)) instanceof Grass ||
-                world.getNonBlocking(world.getLocation(this)) instanceof RabbitHole) {
+    //Rabbit tries to find premade hole
+    public void findHole() {
+        if (this.hole == null) {
+            Location l = world.getLocation(this);
 
-            world.delete(world.getNonBlocking(world.getLocation(this)));
+            Location holeLocation = searcher.searchForObject(RabbitHole.class, l, 3);
+
+            if (holeLocation != null) {
+                this.hole = (RabbitHole) world.getTile(holeLocation);
+                setTarget(holeLocation);  // Move towards the found hole
+            } else {
+                // No nearby hole found, dig a new one
+                digHole();
+                setTarget(world.getLocation(hole));
+            }
         }
 
-        RabbitHole rabbitHole = new RabbitHole();
-        world.setTile(world.getLocation(this), rabbitHole);
+        if (hole != null && target == null) {
+            setTarget(world.getLocation(hole));
+        }
+    }
+
+    //A rabbit digs a hole
+    public void digHole () {
+        Location l = world.getLocation(this);
+
+        if (searcher.grassAt(l)) {
+            world.delete(world.getNonBlocking(l));
+        }
+
+        RabbitHole rabbitHole = new RabbitHole(world);
+        world.setTile(l, rabbitHole);
         this.hole = rabbitHole;
     }
 
-    public void exitHole(World world) {
+    //Rabbit enters rabbit hole
+    public void enterRabbitHole() {
+        isOnMap = false;
+        hole.addRabbit(this);
+        world.remove(this);
+    }
+
+    //Exit the rabbit hole
+    public void exitHole() {
         if (hole.isFirst(this) && world.isTileEmpty(world.getLocation(hole))) {
             hole.removeRabbit(this);
+            Location l = world.getLocation(hole);
+            world.setTile(l, this);
             isOnMap = true;
-            world.setTile(hole.getLocation(), this);
-            if (hole.rabbitsInHole() > 5) {
-                hole = null;
-            }
         }
     }
 
-    void reproduce(World world) {
-        System.out.println("Rabbit reproduced");
-        Rabbit babyRabbit = new Rabbit(hole);
-        world.add(babyRabbit);
-        hole.addRabbit(babyRabbit);
-    }
-
-    void grow(World world) {
-        energy -= energyDecay;
-        if (energy == 2) {
-            world.delete(this);
+    //When a rabbit has had enough food, has grown or above and shares a hole with another rabbit, it reproduces
+    public void reproduce() {
+        if (hole.hasGrownRabbits() && hole != null) {
+            Rabbit babyRabbit = new Rabbit(this.hole, world);
+            world.add(babyRabbit);
+            hole.addRabbit(babyRabbit);
         }
-
-        //Mega fed kode der gør at kaninen skifter sprite
     }
 
-    void setTarget(Location location) {
+    //Sets a target for the rabbit
+    public void setTarget(Location location) {
         target = location;
-        targetX = location.getX();
-        targetY = location.getY();
-    }
-
-    void performAction(World world) {
-        Object o = world.getTile(target);
-        if (o instanceof RabbitHole) {
-            System.out.println("Reached hole");
-            isOnMap = false;
-            hole.addRabbit(this);
-            world.remove(this);
+        try {
+            targetX = target.getX();
+            targetY = target.getY();
+        } catch (NullPointerException e) {
+            //Do nothing
         }
     }
 
-    boolean ableToMove() {
-        return (random.nextInt(energy) != 0);
+    //Rabbit performs action when it reaches target
+    void performAction() {
+        Object o = world.getNonBlocking(target);
+
+        if (o instanceof RabbitHole) {
+            if (this.hole == null) {
+                this.hole = (RabbitHole) world.getTile(target);
+            }
+
+            enterRabbitHole();
+            setTarget(null);
+        }
+        if (o instanceof Grass) {
+            eatGrass();
+            setTarget(null);
+        }
+    }
+
+    //Update age
+    public void updateAge() {
+        stepsLived++;
+        if (stepsLived % 20 == 0) { age++; }
+        if (age % 3 == 0) { grow(); }
+    }
+
+    //Rabbit grows every 3 days
+    public void grow(){
+        hasGrown = true;
+    }
+
+    //A rabbit dies
+    public void die () {
+        System.out.println("Rabbit died");
+        isOnMap = false;
+        world.delete(this);
+    }
+
+    //Getter for eatenGrass
+    public int getEatenGrass () {
+        return eatenGrass;
+    }
+
+    //setter for eatenGrass
+    public void setEatenGrass (int value) {
+        eatenGrass = value;
+    }
+
+    //Getter for hasGrown value
+    public boolean hasGrown() {
+        return hasGrown;
+    }
+
+    //Getter for isOnMap value
+    public boolean isOnMap() {
+        return isOnMap;
     }
 }
