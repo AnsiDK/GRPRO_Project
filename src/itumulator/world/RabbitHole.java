@@ -47,9 +47,11 @@ public class RabbitHole implements NonBlocking {
     //If there are too many rabbits in a hole a new hole is made at a random location on the map
     public void splitRabbits() {
         Location newHoleLocation = rLoc.getRandomNonRabbitHoleLocation();
+        //Program crashes when it tries to set rabbithole on something called Grass@7f2789a0 (Ask TA about it)
         if (world.getNonBlocking(newHoleLocation) instanceof Grass) {
             world.delete(world.getTile(newHoleLocation));
         }
+        System.out.println("Setting new rabbitHole at: " + newHoleLocation + " replacing " + world.getNonBlocking(newHoleLocation));
         RabbitHole newHole = new RabbitHole(world);
         world.setTile(newHoleLocation, newHole);
 

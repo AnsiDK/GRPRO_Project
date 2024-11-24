@@ -31,7 +31,7 @@ public class Main {
                 size = Integer.parseInt(name);
 
                 //TestSize
-                //size = 20;
+                size = 20;
                 break;
             }
         }
@@ -42,10 +42,11 @@ public class Main {
         //Initialize RandomLocationHelper
         rLoc = new RandomLocationHelper(w);
 
-        // Plant the grass
+        /*
         for (String name : input.keySet()) {
-            spawnStuff(name, input, w);
+            spawnStuff(name, input);
         }
+        */
 
         DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
         p.setDisplayInformation(Grass.class, grassDi);
@@ -57,10 +58,12 @@ public class Main {
         p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
         //Rabbit and Rabbithole test
-        // for (int i = 0; i < 5; i++) {
-        //    Location l = rLoc.getRandomLocation();
-        //    w.setTile(l, new Rabbit(w));
-        //}
+        for (int i = 0; i < 5; i++) {
+            Location l = rLoc.getRandomLocation();
+            Location l2 = rLoc.getRandomLocation();
+            w.setTile(l, new Rabbit(w));
+            w.setTile(l2, new Grass(w));
+        }
         //Test * * * * *
 
         p.show();
@@ -70,37 +73,51 @@ public class Main {
         }
     }
 
+    //Imports a random file from week-1 folder
     static Map<String, String> fileImport() {
 
-        File file = new File("week-1/t1-1a.txt");
+        String folderPath = "week-1";
 
-        try {
-            Scanner sc = new Scanner(file);
-            Map<String, String> map = new HashMap<>();
+        File folder = new File(folderPath);
 
-            while (sc.hasNextLine()) {
-                List<String> temp = Arrays.asList(sc.nextLine().split(" "));
-                if (temp.size() < 2) {
-                    map.put(temp.getFirst(), null);
-                } else {
-                    map.put(temp.get(0), temp.get(1));
+        if (folder.isDirectory()) {
+            File[] txtFiles = folder.listFiles((dir, name) -> name.endsWith(".txt"));
+
+            if (txtFiles != null && txtFiles.length > 0) {
+                int randomIndex = r.nextInt(txtFiles.length);
+                File randomFile = txtFiles[randomIndex];
+
+                try {
+                    Scanner sc = new Scanner(randomFile);
+                    Map<String, String> map = new HashMap<>();
+
+                    while (sc.hasNextLine()) {
+                        List<String> temp = Arrays.asList(sc.nextLine().split(" "));
+                        if (temp.size() < 2) {
+                            map.put(temp.getFirst(), null);
+                        } else {
+                            map.put(temp.get(0), temp.get(1));
+                        }
+                    }
+                    System.out.println(randomFile.getName() + " " + map);
+                    return map;
+                } catch (FileNotFoundException e) {
+                    System.out.println("File not found: " + randomFile);
+                    return null;
                 }
             }
-            return map;
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + "week-1/t1-1a.txt");
-            return null;
         }
+        return null;
     }
 
-    public static void spawnStuff(String name, Map<String, String> input, World w) {
+    public static void spawnStuff(String name, Map<String, String> input) {
         try {
-            if (input.get(name).contains("/")) {
-                List<String> temp = new ArrayList<>(List.of(input.get(name).split("/")));
+            if (input.get(name).contains("-")) {
+                List<String> temp = new ArrayList<>(List.of(input.get(name).split("-")));
 
                 int lower = Integer.parseInt(temp.getFirst());
                 int upper = Integer.parseInt(temp.getLast());
-                int amount = r.nextInt(lower, upper);
+                int amount = r.nextInt(lower, upper+1);
 
                 switch (name) {
                     case "grass" -> {
@@ -117,6 +134,9 @@ public class Main {
                         for (int i = 0; i < amount; i++) {
                             spawnHole();
                         }
+                    }
+                    case "" -> {
+                        //Do nothing
                     }
                 }
 
@@ -174,14 +194,8 @@ public class Main {
 
     // Find a location for a Blocking object
     public static Location blockingLocation() {
-        Location l = new Location(r.nextInt(size), r.nextInt(size));
-
-        while (!w.isTileEmpty(l)) {
-            l = new Location(r.nextInt(size), r.nextInt(size));
-        }
-
         nonBlockingObjects++;
-        return l;
+        return rLoc.getRandomLocation();
     }
 
     public static int getNonBlockingObjects() {          //Get the amount of grass in the world

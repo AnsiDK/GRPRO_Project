@@ -17,12 +17,9 @@ public class Rabbit implements Actor{
     private int age = 0;
     private int stepsLived = 0;
     private int eatenGrass = 0;
-    private int energy = 10;
     public RabbitHole hole;
     private Boolean isOnMap = true;
     private Location target;
-    private int targetX;
-    private int targetY;
     private World world;
     private boolean hasGrown = false;
 
@@ -64,6 +61,8 @@ public class Rabbit implements Actor{
 
         if (isOnMap) {
             Location loc = world.getCurrentLocation();
+
+            //Finding grass is 1st priority
             if (eatenGrass == 0 && searcher.isInVicinity(loc, Grass.class, 3) && target == null) {
                 Location l = searcher.searchForObject(Grass.class, loc, 3);
                 setTarget(l);
@@ -206,8 +205,8 @@ public class Rabbit implements Actor{
     public void setTarget(Location location) {
         target = location;
         try {
-            targetX = target.getX();
-            targetY = target.getY();
+            int targetX = target.getX();
+            int targetY = target.getY();
         } catch (NullPointerException e) {
             //Do nothing
         }
