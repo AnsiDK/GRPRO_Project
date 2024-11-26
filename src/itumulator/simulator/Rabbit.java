@@ -8,7 +8,7 @@ import methodHelpers.TimeManager;
 import methodHelpers.Searcher;
 import java.util.*;
 
-public class Rabbit implements Actor{
+public class Rabbit implements Actor {
 
     private final Random r = new Random();
     private Searcher searcher;
@@ -134,7 +134,7 @@ public class Rabbit implements Actor{
         //Move closer to the target
         world.move(this, bestMove);
 
-        if (bestMove.equals(target)) {
+        if (target.equals(bestMove)) {
             performAction();
             target = null;
         }
@@ -264,7 +264,10 @@ public class Rabbit implements Actor{
         return hasGrown;
     }
 
-    //Getter for isOnMap value
+    /**
+     * Getter for isOnMap value
+     * @return
+     */
     public boolean isOnMap() {
         return isOnMap;
     }

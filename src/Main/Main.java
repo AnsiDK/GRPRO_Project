@@ -31,22 +31,22 @@ public class Main {
                 size = Integer.parseInt(name);
 
                 //TestSize
-                size = 20;
+                //size = 10;
                 break;
             }
         }
 
         // Make world
-        Program p = new Program(size, 800, 1000);
+        Program p = new Program(size, 800, 500);
         w = p.getWorld();
         //Initialize RandomLocationHelper
         rLoc = new RandomLocationHelper(w);
 
-        /*
+
         for (String name : input.keySet()) {
             spawnStuff(name, input);
         }
-        */
+
 
         DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
         p.setDisplayInformation(Grass.class, grassDi);
@@ -58,12 +58,12 @@ public class Main {
         p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
         //Rabbit and Rabbithole test
-        for (int i = 0; i < 5; i++) {
-            Location l = rLoc.getRandomLocation();
-            Location l2 = rLoc.getRandomLocation();
-            w.setTile(l, new Rabbit(w));
-            w.setTile(l2, new Grass(w));
-        }
+        //for (int i = 0; i < 5; i++) {
+        //    Location l = rLoc.getRandomLocation();
+        //    Location l2 = rLoc.getRandomLocation();
+        //    w.setTile(l, new Rabbit(w));
+        //    w.setTile(l2, new Grass(w));
+        //}
         //Test * * * * *
 
         p.show();
@@ -194,7 +194,6 @@ public class Main {
 
     // Find a location for a Blocking object
     public static Location blockingLocation() {
-        nonBlockingObjects++;
         return rLoc.getRandomLocation();
     }
 
