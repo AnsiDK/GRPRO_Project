@@ -4,11 +4,12 @@ import Main.Main;
 import itumulator.world.RabbitHole;
 import itumulator.world.World;
 import itumulator.world.Location;
+// import itumulator.simulator.Animal;
 import methodHelpers.TimeManager;
 import methodHelpers.Searcher;
 import java.util.*;
 
-public class Rabbit implements Actor {
+public class Rabbit extends Animal {
 
     private final Random r = new Random();
     private Searcher searcher;
@@ -18,13 +19,13 @@ public class Rabbit implements Actor {
     private int stepsLived = 0;
     private int eatenGrass = 0;
     public RabbitHole hole;
-    private Boolean isOnMap = true;
+    private boolean isOnMap = true;
     private Location target;
     private World world;
     private boolean hasGrown = false;
 
     public Rabbit(World world) {
-        super();
+        super(age, stepsLived, isOnMap, target, world, hasGrown);
         initializeRabbit(null, true, world);
     }
 

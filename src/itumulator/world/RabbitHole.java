@@ -5,9 +5,8 @@ import itumulator.simulator.Grass;
 import itumulator.simulator.Rabbit;
 import methodHelpers.RandomLocationHelper;
 import java.util.*;
-import itumulator.world.*;
 
-public class RabbitHole implements NonBlocking {
+public class RabbitHole extends Home {
     Location location;
     List<Rabbit> rabbits;
     RabbitHole otherExit;
@@ -22,15 +21,7 @@ public class RabbitHole implements NonBlocking {
         this.world = world;
     }
 
-    //Getter for the location of the hole
-    public Location getLocation() {
-        return location;
-    }
 
-    //Adds rabbit to the hole
-    public void addRabbit(Rabbit rabbit) {
-        rabbits.add(rabbit);
-    }
 
     //Removes rabbit from the hole
     public void removeRabbit(Rabbit rabbit) {
@@ -38,11 +29,6 @@ public class RabbitHole implements NonBlocking {
             splitRabbits();
         }
         rabbits.remove(rabbit);
-    }
-
-    //Checker to see if a rabbit is first
-    public boolean isFirst(Rabbit rabbit) {
-        return rabbits.getFirst() == rabbit;
     }
 
     public void splitRabbits() {

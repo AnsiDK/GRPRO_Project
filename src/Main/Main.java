@@ -14,7 +14,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-
+/**
+ * This is the main class where the main function runs.
+ *
+ * @author Andreas, Alfred and Nicole
+ */
 public class Main {
     private static int nonBlockingObjects = 0;
     private static int size;
@@ -22,8 +26,12 @@ public class Main {
     static RandomLocationHelper rLoc;
     static World w;
 
+    /**
+     * Main function
+     * @param args ...
+     */
     public static void main(String[] args) {
-        Map<String, String> input = fileImport();
+        Map<String, ArrayList<String>> input = fileImport("week-1/t1-1a.txt");
 
         // Find size of world
         for (String name : input.keySet()) {
@@ -58,62 +66,71 @@ public class Main {
         p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
         //Rabbit and Rabbithole test
-        //for (int i = 0; i < 5; i++) {
-        //    Location l = rLoc.getRandomLocation();
-        //    Location l2 = rLoc.getRandomLocation();
-        //    w.setTile(l, new Rabbit(w));
-        //    w.setTile(l2, new Grass(w));
-        //}
+
+        for (int i = 0; i < 5; i++) {
+            Location l = rLoc.getRandomLocation();
+            Location l2 = rLoc.getRandomLocation();
+            w.setTile(l, new Rabbit(w));
+            w.setTile(l2, new Grass(w));
+        }
+
         //Test * * * * *
 
         p.show();
-
         for (int i = 0; i < 1000; i++) {
             p.simulate();
         }
+
     }
 
-    //Imports a random file from week-1 folder
-    static Map<String, String> fileImport() {
+    /**
+     * This is the function that reads the files and puts the content in a HashMap,
+     * with the keys being the name of the object, and the values being the amount of the objects
+     *
+     * @return A HashMap where keys are the object, and the values are the amount.
+     */
+    static Map<String, ArrayList<String>> fileImport(String fileName) {
 
-        String folderPath = "week-1";
+        File file = new File(fileName);
 
-        File folder = new File(folderPath);
+        try {
+            Scanner sc = new Scanner(file);
+            Map<String, ArrayList<String>> map = new HashMap<>();
 
-        if (folder.isDirectory()) {
-            File[] txtFiles = folder.listFiles((dir, name) -> name.endsWith(".txt"));
-
-            if (txtFiles != null && txtFiles.length > 0) {
-                int randomIndex = r.nextInt(txtFiles.length);
-                File randomFile = txtFiles[randomIndex];
-
-                try {
-                    Scanner sc = new Scanner(randomFile);
-                    Map<String, String> map = new HashMap<>();
-
-                    while (sc.hasNextLine()) {
-                        List<String> temp = Arrays.asList(sc.nextLine().split(" "));
-                        if (temp.size() < 2) {
-                            map.put(temp.getFirst(), null);
-                        } else {
-                            map.put(temp.get(0), temp.get(1));
-                        }
-                    }
-                    System.out.println(randomFile.getName() + " " + map);
-                    return map;
-                } catch (FileNotFoundException e) {
-                    System.out.println("File not found: " + randomFile);
-                    return null;
+            while (sc.hasNextLine()) {
+                List<String> temp = Arrays.asList(sc.nextLine().split(" "));
+                if (temp.size() < 2) {
+                    map.put(temp.getFirst(), null);
+                } else if (temp.size() == 2) {
+                    map.put(temp.getFirst(), new ArrayList<>());
+                    map.get(temp.getFirst()).add(temp.get(1));
+                } else {
+                    map.put(temp.getFirst(), new ArrayList<>());
+                    map.get(temp.getFirst()).add(temp.get(1));
+                    map.get(temp.getFirst()).add(temp.get(2));
                 }
             }
+            return map;
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + fileName);
+            return null;
         }
-        return null;
     }
 
-    public static void spawnStuff(String name, Map<String, String> input) {
+    /**
+     * This function spawns the objects that are in the input file.
+     * @param name This is the name f the object
+     * @param input This is the amount of objects that needs to be spawned.
+     */
+    public static void spawnStuff(String name, Map<String, ArrayList<String>> input) {
         try {
             if (input.get(name).contains("-")) {
-                List<String> temp = new ArrayList<>(List.of(input.get(name).split("-")));
+                List<String> temp = new ArrayList<>(List.of(input.get(name).get(1).split("-")));
+                String coordinates = null;
+
+                if (input.get(name).size() == 3) {
+                    coordinates = input.get(name).get(2);
+                }
 
                 int lower = Integer.parseInt(temp.getFirst());
                 int upper = Integer.parseInt(temp.getLast());
@@ -135,6 +152,21 @@ public class Main {
                             spawnHole();
                         }
                     }
+                    case "bear" -> {
+                        for (int i = 0; i < amount; i++) {
+                            //spawnBear(coordinates);
+                        }
+                    }
+                    case "wolf" -> {
+                        for (int i = 0; i < amount; i++) {
+                            //spawnWolf();
+                        }
+                    }
+                    case "berry" -> {
+                        for (int i = 0; i < amount; i++) {
+                            //spawnBerry();
+                        }
+                    }
                     case "" -> {
                         //Do nothing
                     }
@@ -143,17 +175,17 @@ public class Main {
             } else {
                 switch (name) {
                     case "grass" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                        for (int i = 0; i < Integer.parseInt(input.get(name).get(1)); i++) {
                             spawnGrass();
                         }
                     }
                     case "rabbit" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                        for (int i = 0; i < Integer.parseInt(input.get(name).get(1)); i++) {
                             spawnRabbit();
                         }
                     }
                     case "burrow" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                        for (int i = 0; i < Integer.parseInt(input.get(name).get(1)); i++) {
                             spawnHole();
                         }
                     }
@@ -166,46 +198,41 @@ public class Main {
 
     // Spawn some Grass
     public static void spawnGrass() {
-        w.setTile(nonBlockingLocation(), new Grass(w));
+        w.setTile(rLoc.getRandomNonBlockingLocation(), new Grass(w));
     }
 
     // Spawn a rabbit
     public static void spawnRabbit() {
-        w.setTile(blockingLocation(), new Rabbit(w));
+        w.setTile(rLoc.getRandomLocation(), new Rabbit(w));
     }
 
     // Spawn a RabbitHole
     public static void spawnHole() {
-        Location l = nonBlockingLocation();
+        Location l = rLoc.getRandomNonBlockingLocation();
         w.setTile(l, new RabbitHole(w));
     }
 
-    // Find a location for a NonBlocking object
-    public static Location nonBlockingLocation() {
-        Location l = new Location(r.nextInt(size), r.nextInt(size));
-
-        while (w.containsNonBlocking(l)) {
-            l = new Location(r.nextInt(size), r.nextInt(size));
-        }
-
-        nonBlockingObjects++;
-        return l;
-    }
-
-    // Find a location for a Blocking object
-    public static Location blockingLocation() {
-        return rLoc.getRandomLocation();
-    }
-
-    public static int getNonBlockingObjects() {          //Get the amount of grass in the world
+    /**
+     * Gives the amount of nonBlocking objects in the world
+     * @return int
+     */
+    public static int getNonBlockingObjects() {
         return nonBlockingObjects;
     }
 
-    public static void setNonBlockingObjects(int value) {           //"Change" the amount of grass in the world
+    /**
+     * "Change the amount of non blocking objects in the world"
+     * @param value
+     */
+    public static void setNonBlockingObjects(int value) {
         nonBlockingObjects = value;
     }
 
-    public static int getSize() {           //"Change" the amount of grass in the world
+    /**
+     * Get the size of the current world
+     * @return int
+     */
+    public static int getSize() {
         return size;
     }
 }

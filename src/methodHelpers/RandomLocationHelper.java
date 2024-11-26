@@ -31,4 +31,16 @@ public class RandomLocationHelper {
         }
         return l;
     }
+
+    /**
+     * Gives a random location in the world that is not occupied by a non blocking object
+     * @return Location
+     */
+    public Location getRandomNonBlockingLocation() {
+        Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+        while (world.getNonBlocking(l) != null) {
+            l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+        }
+        return l;
+    }
 }
