@@ -1,6 +1,7 @@
 import itumulator.executable.Program;
 import itumulator.simulator.Grass;
 import itumulator.simulator.Rabbit;
+import itumulator.world.RabbitHole;
 import itumulator.world.World;
 import itumulator.world.Location;
 import methodHelpers.RandomLocationHelper;
@@ -134,9 +135,103 @@ public class Tests {
 
     @Test
     public void Test12cde () {
-        CreateWorld("week-1/t1-2cde");
+        CreateWorld("week-1/t1-2c");
 
-        
+        boolean reproduced = false;
+
+        Map<Object, Location> objects = w.getEntities();
+
+        int rabbits = 0;
+
+        for (Object o : objects.keySet()) {
+            if (o == Rabbit.class) {
+                rabbits++;
+            }
+        }
+
+        for (int i = 0; i < 100; i++) {
+            p.simulate();
+        }
+
+        objects = w.getEntities();
+
+        int rabbitsAfter = 0;
+
+        for (Object o : objects.keySet()) {
+            if (o == Rabbit.class) {
+                rabbitsAfter++;
+            }
+        }
+
+        if (rabbitsAfter > rabbits) {
+            reproduced = true;
+        }
+
+        assertTrue(reproduced);
+    }
+
+    @Test
+    public void Test12f () {
+        CreateWorld("week-1/t1-3fg");
+
+        Map<Object, Location> objects = w.getEntities();
+
+        boolean diggedHole = false;
+
+        int holesBefore = 0;
+
+        for (Object o : objects.keySet()) {
+            if (o == RabbitHole.class) {
+                holesBefore++;
+            }
+        }
+
+        for (int i = 0; i < 100; i++) {
+            p.simulate();
+        }
+
+        objects = w.getEntities();
+
+        int holesAfter = 0;
+
+        for (Object o : objects.keySet()) {
+            if (o == Rabbit.class) {
+                holesAfter++;
+            }
+        }
+
+        if (holesAfter > holesBefore) {
+            diggedHole = true;
+        }
+
+        assertTrue(diggedHole);
+    }
+
+    @Test
+    public void Test12g () {
+        CreateWorld("week-1/t1-fg");
+
+        Map<Object, Location> objects = w.getEntities();
+
+        Rabbit rabbit = null;
+
+        for (Object o : objects.keySet()) {
+            if (o == Rabbit.class) {
+                Location loc = objects.get(o);
+                rabbit = (Rabbit) w.getTile(loc);
+            }
+        }
+
+        for (int i = 0; i < 10; i++) {
+            p.simulate();
+        }
+
+        RabbitHole hole = rabbit.getHole();
+
+        Location locRabBefore = w.getLocation(rabbit);
+        Location locHol = w.getLocation(hole);
+
+
     }
 
     public void CreateWorld(String filename) {
@@ -151,7 +246,7 @@ public class Tests {
         }
 
         // Make world
-        p = new Program(size, 800, 500);
+        p = new Program(size, 80, 500);
         w = p.getWorld();
 
         for (String name : input.keySet()) {
