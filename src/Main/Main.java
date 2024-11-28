@@ -89,7 +89,7 @@ public class Main {
      *
      * @return A HashMap where keys are the object, and the values are the amount.
      */
-    static Map<String, ArrayList<String>> fileImport(String fileName) {
+    public static Map<String, ArrayList<String>> fileImport(String fileName) {
 
         File file = new File(fileName);
 
