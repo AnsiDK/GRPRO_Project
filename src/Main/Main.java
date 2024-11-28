@@ -8,6 +8,7 @@ import ourActors.Grass;
 import ourActors.Rabbit;
 import itumulator.world.Location;
 import ourActors.Wolf;
+import ourActors.WolfPack;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
@@ -63,7 +64,7 @@ public class Main {
         p.setDisplayInformation(Wolf.class, wolfDi);
 
         //Rabbit and Rabbithole test
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 0; i++) {
             Location l = rLoc.getRandomLocation();
             Location l2 = rLoc.getRandomLocation();
             w.setTile(l, new Rabbit(w));
@@ -71,7 +72,7 @@ public class Main {
         }
 
         Location l = rLoc.getRandomLocation();
-        w.setTile(l, new Wolf(w));
+        new WolfPack(w, 3, l);
         //Test * * * * *
 
         p.show();

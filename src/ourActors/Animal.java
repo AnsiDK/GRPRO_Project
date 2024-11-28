@@ -116,7 +116,6 @@ public abstract class Animal implements Actor {
     }
 
     public void die () {
-        System.out.println("Rabbit died");
         isOnMap = false;
         world.delete(this);
     }

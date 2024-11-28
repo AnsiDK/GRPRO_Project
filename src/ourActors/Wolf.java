@@ -8,21 +8,44 @@ import methodHelpers.TimeManager;
 import java.util.Random;
 
 public class Wolf extends Animal {
+    private int wolfPackID;
+    private boolean isPackLeader;
+    private WolfPack wolfPack;
 
-    public Wolf(World world) {
+    public Wolf(World world, WolfPack wolfPack, int wolfPackID) {
         super(world);
         searcher = new Searcher(world);
         timeManager = new TimeManager(this);
         r = new Random();
+        this.wolfPackID = wolfPackID;
+        this.wolfPack = wolfPack;
+    }
+
+    //Overloaded constructor for a pack leader
+    public Wolf(World world, WolfPack wolfPack, int wolfPackID, boolean isPackLeader) {
+        super(world);
+        searcher = new Searcher(world);
+        timeManager = new TimeManager(this);
+        r = new Random();
+        this.wolfPackID = wolfPackID;
+        this.wolfPack = wolfPack;
+        this.isPackLeader = isPackLeader;
     }
 
     @Override
     public void actDay() {
+        timeManager.updateTime(true);
+
         if (isOnMap) {
             Location l = world.getCurrentLocation();
             Location rabbit = Searcher.searchForObject(Rabbit.class, l, 3);
             if(rabbit != null) {
                 setTarget(rabbit);
+            }
+
+            if (!isPackLeader && distFromPackLeader() > 3) {
+                Location packLeaderLocation = world.getLocation(wolfPack.getPackLeader());
+                setTarget(packLeaderLocation);
             }
 
             if (target != null) {
@@ -36,7 +59,12 @@ public class Wolf extends Animal {
 
     @Override
     void actNight() {
-        findHome();
+        //timeManager.updateTime(false);
+
+        if (isOnMap) {
+            //if (!(world.getNonBlocking(target) instanceof WolfDen)) { findHome(); }
+            //goTowardsTarget();
+        }
     }
 
     @Override
@@ -85,5 +113,13 @@ public class Wolf extends Animal {
         foodEaten++;
 
         System.out.println("I have eaten " + foodEaten + " rabbits");
+    }
+
+    private double distFromPackLeader() {
+        Location l = world.getLocation(wolfPack.getPackLeader());
+        int x = l.getX() - world.getCurrentLocation().getX();
+        int y = l.getY() - world.getCurrentLocation().getY();
+
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 }
