@@ -1,8 +1,8 @@
 package methodHelpers;
 
-import itumulator.simulator.Grass;
+import ourActors.Grass;
 import itumulator.world.Location;
-import itumulator.world.RabbitHole;
+import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 
 import java.util.Set;
@@ -15,7 +15,7 @@ public class Searcher {
         this.world = world;
     }
 
-    public Location searchForObject(Class<?> clazz, Location l, int radius) {
+    public static Location searchForObject(Class<?> clazz, Location l, int radius) {
         Set<Location> set = world.getSurroundingTiles(l, radius);
 
         for (Location location : set) {

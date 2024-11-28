@@ -4,10 +4,11 @@ import java.awt.Color;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
-import itumulator.simulator.Grass;
-import itumulator.simulator.Rabbit;
+import ourActors.Grass;
+import ourActors.Rabbit;
 import itumulator.world.Location;
-import itumulator.world.RabbitHole;
+import ourActors.Wolf;
+import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
 import java.io.File;
@@ -28,10 +29,10 @@ public class Main {
         // Find size of world
         for (String name : input.keySet()) {
             if (input.get(name) == null) {
-                size = Integer.parseInt(name);
+                //size = Integer.parseInt(name);
 
                 //TestSize
-                //size = 10;
+                size = 10;
                 break;
             }
         }
@@ -42,10 +43,11 @@ public class Main {
         //Initialize RandomLocationHelper
         rLoc = new RandomLocationHelper(w);
 
-
+        /*
         for (String name : input.keySet()) {
             spawnStuff(name, input);
         }
+        */
 
 
         DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
@@ -57,13 +59,19 @@ public class Main {
         DisplayInformation rabbitHoleDi = new DisplayInformation(Color.yellow, "hole");
         p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
+        DisplayInformation wolfDi = new DisplayInformation(Color.red, "wolf-small");
+        p.setDisplayInformation(Wolf.class, wolfDi);
+
         //Rabbit and Rabbithole test
-        //for (int i = 0; i < 5; i++) {
-        //    Location l = rLoc.getRandomLocation();
-        //    Location l2 = rLoc.getRandomLocation();
-        //    w.setTile(l, new Rabbit(w));
-        //    w.setTile(l2, new Grass(w));
-        //}
+        for (int i = 0; i < 5; i++) {
+            Location l = rLoc.getRandomLocation();
+            Location l2 = rLoc.getRandomLocation();
+            w.setTile(l, new Rabbit(w));
+            w.setTile(l2, new Grass(w));
+        }
+
+        Location l = rLoc.getRandomLocation();
+        w.setTile(l, new Wolf(w));
         //Test * * * * *
 
         p.show();
@@ -135,7 +143,7 @@ public class Main {
                             spawnHole();
                         }
                     }
-                    case "" -> {
+                    default -> {
                         //Do nothing
                     }
                 }
@@ -156,6 +164,9 @@ public class Main {
                         for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
                             spawnHole();
                         }
+                    }
+                    default -> {
+                        //Do nothing
                     }
                 }
             }

@@ -2,7 +2,7 @@ package methodHelpers;
 
 import Main.Main;
 import itumulator.world.Location;
-import itumulator.world.RabbitHole;
+import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 
 import java.util.Random;

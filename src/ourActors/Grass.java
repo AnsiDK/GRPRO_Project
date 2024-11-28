@@ -1,8 +1,8 @@
-package itumulator.simulator;
+package ourActors;
 
+import itumulator.simulator.Actor;
 import itumulator.world.*;
 import Main.Main;
-import methodHelpers.RandomLocationHelper;
 
 import java.util.*;
 

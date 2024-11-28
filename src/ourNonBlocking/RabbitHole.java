@@ -1,11 +1,13 @@
-package itumulator.world;
+package ourNonBlocking;
 
 import Main.Main;
-import itumulator.simulator.Grass;
-import itumulator.simulator.Rabbit;
+import ourActors.Grass;
+import ourActors.Rabbit;
+import itumulator.world.Location;
+import itumulator.world.NonBlocking;
+import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
 import java.util.*;
-import itumulator.world.*;
 
 public class RabbitHole implements NonBlocking {
     Location location;
@@ -52,14 +54,13 @@ public class RabbitHole implements NonBlocking {
         } else {
             Main.setNonBlockingObjects(Main.getNonBlockingObjects()+1);
         }
-        System.out.println("Setting new rabbitHole at: " + newHoleLocation + " replacing " + world.getNonBlocking(newHoleLocation));
 
         RabbitHole newHole = new RabbitHole(world);
         world.setTile(newHoleLocation, newHole);
 
         List<Rabbit> excessRabbits = new ArrayList<>(rabbits.subList(5, rabbits.size()));
         for (Rabbit rabbit : excessRabbits) {
-            rabbit.hole = newHole;
+            rabbit.home = newHole;
             newHole.addRabbit(rabbit);
         }
         rabbits.removeAll(excessRabbits);
