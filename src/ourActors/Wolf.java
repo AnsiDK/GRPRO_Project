@@ -1,9 +1,11 @@
-package ourActors.blocking;
+package ourActors;
 
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
+import ourNonBlocking.RabbitHole;
+import ourNonBlocking.WolfDen;
 
 import java.util.Random;
 
@@ -34,7 +36,7 @@ public class Wolf extends Animal {
 
     @Override
     public void actDay() {
-        timeManager.updateTime(true);
+        //timeManager.updateTime(true);
 
         if (isOnMap) {
             Location l = world.getCurrentLocation();
@@ -43,9 +45,15 @@ public class Wolf extends Animal {
                 setTarget(rabbit);
             }
 
-            if (!isPackLeader && distFromPackLeader() > 3 && foodEaten != 0) {
-                Location packLeaderLocation = world.getLocation(wolfPack.getPackLeader());
-                setTarget(packLeaderLocation);
+
+            //I do not know how this piece of shit code is ever accssesed while the wolf is not on the map...
+            try {
+                if (!isPackLeader && distFromPackLeader() > 3 && foodEaten != 0) {
+                    Location packLeaderLocation = world.getLocation(wolfPack.getPackLeader());
+                    setTarget(packLeaderLocation);
+                }
+            } catch (IllegalArgumentException e) {
+                //well...
             }
 
             if (target != null) {
@@ -57,13 +65,18 @@ public class Wolf extends Animal {
         } else { leaveHome(); }
     }
 
-    @Override
     void actNight() {
-        //timeManager.updateTime(false);
+        timeManager.updateTime(false);
 
         if (isOnMap) {
-            //if (!(world.getNonBlocking(target) instanceof WolfDen)) { findHome(); }
-            //goTowardsTarget();
+            if (target == null) { findHome(); }
+
+            if (target != null) {
+                goTowardsTarget();
+            } else {
+                moveRandomly();
+                System.out.println("Chose to walk around randomly while home = " + home);
+            }
         }
     }
 
@@ -74,33 +87,34 @@ public class Wolf extends Animal {
             eatRabbit(r);
         }
 
-        /*
         if (world.getTile(target) instanceof WolfDen) {
-
+            enterHome();
         }
-
-         */
     }
 
     @Override
     public void findHome() {
-
+        if (home == null) {
+            buildHome();
+            setTarget(home.getLocation());
+        } else {
+            setTarget(home.getLocation());
+        }
     }
 
     @Override
     void buildHome() {
+        Location l = world.getLocation(this);
 
+        if (searcher.grassAt(l)) {
+            world.delete(world.getNonBlocking(l));
+        }
+
+        WolfDen wolfDen = new WolfDen(world);
+        world.setTile(l, wolfDen);
+        wolfPack.buildDen(wolfDen);
     }
 
-    @Override
-    void enterHome() {
-
-    }
-
-    @Override
-    void leaveHome() {
-
-    }
 
     @Override
     public void reproduce() {
@@ -111,15 +125,27 @@ public class Wolf extends Animal {
         eatenRabbit.setIsOnMap(false);
         world.delete(eatenRabbit);
         foodEaten++;
-
-        System.out.println("I have eaten " + foodEaten + " rabbits");
     }
 
     private double distFromPackLeader() {
         Location l = world.getLocation(wolfPack.getPackLeader());
-        int x = l.getX() - world.getCurrentLocation().getX();
-        int y = l.getY() - world.getCurrentLocation().getY();
+        Location l2 = world.getCurrentLocation();
+
+        if (l == null) {
+            l = home.getLocation();
+        }
+
+        if (l2 == null) {
+            l2 = home.getLocation();
+        }
+
+        int x = l.getX() - l2.getX();
+        int y = l.getY() - l2.getY();
 
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
+
+    public void setHome(WolfDen home) {
+        this.home = home;
     }
 }

@@ -1,10 +1,10 @@
-package ourActors.blocking;
+package ourActors;
 
 
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
-import ourActors.nonBlocking.Grass;
+import ourNonBlocking.Grass;
 
 import java.util.*;
 
@@ -67,16 +67,6 @@ public class Bear extends Animal {
 
     @Override
     void buildHome() {
-        //Don't think the bear has a "home"
-    }
-
-    @Override
-    void enterHome() {
-        //Don't think the bear has a "home"
-    }
-
-    @Override
-    void leaveHome() {
         //Don't think the bear has a "home"
     }
 

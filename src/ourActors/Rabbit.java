@@ -1,7 +1,8 @@
-package ourActors.blocking;
+package ourActors;
 
 import Main.Main;
-import ourActors.nonBlocking.Grass;
+import ourNonBlocking.Grass;
+import ourNonBlocking.Home;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 import itumulator.world.Location;
@@ -23,7 +24,7 @@ public class Rabbit extends Animal {
     }
 
     //Initializing a rabbit
-    private void initializeRabbit(RabbitHole hole, boolean isOnMap, World world) {
+    private void initializeRabbit(Home hole, boolean isOnMap, World world) {
         this.home = hole;
         this.isOnMap = isOnMap;
         this.world = world;
@@ -93,44 +94,6 @@ public class Rabbit extends Animal {
         }
     }
 
-    //The rabbit goes towards its target
-    void goTowardsTarget() {
-        Location start = world.getLocation(this);
-        int moveX = start.getX();
-        int moveY = start.getY();
-        int endX = target.getX();
-        int endY = target.getY();
-
-        if (moveX > endX) {
-            moveX--;
-        } else if (moveX < endX) {
-            moveX++;
-        }
-
-        if (moveY > endY) {
-            moveY--;
-        } else if (moveY < endY) {
-            moveY++;
-        }
-
-        Location move = new Location(moveX, moveY);
-
-        if (world.isTileEmpty(move)) {
-            //Move closer to the target
-            world.move(this, move);
-        } else {
-            List<Location> alternatives = new ArrayList<>(world.getEmptySurroundingTiles());
-            if (!alternatives.isEmpty()) {
-                world.move(this, alternatives.get(r.nextInt(alternatives.size())));
-            }
-        }
-
-        if (target.equals(move)) {
-            performAction();
-            target = null;
-        }
-    }
-
     //Rabbit tries to find premade hole
     public void findHome() {
         if (this.home == null) {
@@ -166,29 +129,12 @@ public class Rabbit extends Animal {
         this.home = rabbitHole;
     }
 
-    //Rabbit enters rabbit hole
-    public void enterHome() {
-        isOnMap = false;
-        home.addRabbit(this);
-        world.remove(this);
-    }
-
-    //Exit the rabbit hole
-    public void leaveHome() {
-        if (home.isFirst(this) && world.isTileEmpty(world.getLocation(home))) {
-            home.removeRabbit(this);
-            Location l = world.getLocation(home);
-            world.setTile(l, this);
-            isOnMap = true;
-        }
-    }
-
     //When a rabbit has had enough food, has grown or above and shares a hole with another rabbit, it reproduces
     public void reproduce() {
-        if (home.hasGrownRabbits() && home != null) {
-            Rabbit babyRabbit = new Rabbit(this.home, world);
+        if (home.hasGrownAnimals() && home != null) {
+            Rabbit babyRabbit = new Rabbit((RabbitHole) this.home, world);
             world.add(babyRabbit);
-            home.addRabbit(babyRabbit);
+            home.addAnimal(babyRabbit);
         }
     }
 

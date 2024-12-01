@@ -1,50 +1,31 @@
 package ourNonBlocking;
 
 import Main.Main;
-import ourActors.nonBlocking.Grass;
-import ourActors.blocking.Rabbit;
+import ourActors.Animal;
+import ourActors.Rabbit;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
 import java.util.*;
 
-public class RabbitHole implements NonBlocking {
-    Location location;
-    List<Rabbit> rabbits;
-    RabbitHole otherExit;
-    Random r = new Random();
-    RandomLocationHelper rLoc;
-    World world;
+public class RabbitHole extends Home {
+    Random r;
+    private RandomLocationHelper rLoc;
 
     public RabbitHole(World world) {
-        super();
-        rabbits = new ArrayList<>();
+        super(world);
+        r = new Random();
         rLoc = new RandomLocationHelper(world);
-        this.world = world;
-    }
-
-    //Getter for the location of the hole
-    public Location getLocation() {
-        return location;
-    }
-
-    //Adds rabbit to the hole
-    public void addRabbit(Rabbit rabbit) {
-        rabbits.add(rabbit);
     }
 
     //Removes rabbit from the hole
-    public void removeRabbit(Rabbit rabbit) {
-        if (rabbits.size() > 6) {
+    @Override
+    public void removeAnimal(Animal rabbit) {
+        if (animals.size() > 6) {
             splitRabbits();
         }
-        rabbits.remove(rabbit);
-    }
-
-    //Checker to see if a rabbit is first
-    public boolean isFirst(Rabbit rabbit) {
-        return rabbits.getFirst() == rabbit;
+        animals.remove(rabbit);
     }
 
     public void splitRabbits() {
@@ -58,24 +39,11 @@ public class RabbitHole implements NonBlocking {
         RabbitHole newHole = new RabbitHole(world);
         world.setTile(newHoleLocation, newHole);
 
-        List<Rabbit> excessRabbits = new ArrayList<>(rabbits.subList(5, rabbits.size()));
-        for (Rabbit rabbit : excessRabbits) {
+        ArrayList<Animal> excessRabbits = new ArrayList<>(animals.subList(5, animals.size()));
+        for (Animal rabbit : excessRabbits) {
             rabbit.home = newHole;
-            newHole.addRabbit(rabbit);
+            newHole.addAnimal(rabbit);
         }
-        rabbits.removeAll(excessRabbits);
-    }
-
-    //Checker to see if more than 2 grown rabbits share the same hole
-    public boolean hasGrownRabbits() {
-        int grownCount = 0;
-
-        for (Rabbit rabbit : rabbits) {
-            if (rabbit.hasGrown()) {
-                grownCount++;
-            }
-        }
-
-        return grownCount >= 2;
+        animals.removeAll(excessRabbits);
     }
 }

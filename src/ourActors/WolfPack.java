@@ -1,8 +1,9 @@
-package ourActors.blocking;
+package ourActors;
 
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
+import ourNonBlocking.WolfDen;
 
 import java.util.*;
 
@@ -14,6 +15,7 @@ public class WolfPack {
     private Location spawnLocation;
     private Random r;
     RandomLocationHelper randomLocationHelper;
+    protected WolfDen wolfDen;
 
     public WolfPack(World world, int wolfAmount, Location spawnLocation) {
         wolves = new ArrayList<Wolf>();
@@ -51,5 +53,16 @@ public class WolfPack {
 
     public int getWolvesAmount() {
         return wolves.size();
+    }
+
+    public void buildDen(WolfDen wolfDen) {
+        this.wolfDen = wolfDen;
+        for (Wolf w : wolves) {
+            w.setHome(wolfDen);
+        }
+    }
+
+    public WolfDen getWolfDen() {
+        return wolfDen;
     }
 }

@@ -1,11 +1,11 @@
-package ourActors.blocking;
+package ourActors;
 
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
-import ourNonBlocking.RabbitHole;
+import ourNonBlocking.Home;
 
 import java.util.*;
 
@@ -15,8 +15,7 @@ public abstract class Animal implements Actor {
     protected int age = 0;
     protected boolean isOnMap = true;
     protected boolean hasGrown = false;
-    // public Home home;
-    public RabbitHole home;
+    public Home home;
     protected Location target;
     protected int foodEaten = 0;
     protected int stepsLived = 0;
@@ -98,8 +97,22 @@ public abstract class Animal implements Actor {
     abstract void performAction();
     public abstract void findHome();
     abstract void buildHome();
-    abstract void enterHome();
-    abstract void leaveHome();
+    protected void enterHome() {
+        isOnMap = false;
+        home.addAnimal(this);
+        world.remove(this);
+    }
+
+    //Exit the rabbit home
+    protected void leaveHome() {
+        if (home.isFirst(this) && world.isTileEmpty(world.getLocation(home))) {
+            home.removeAnimal(this);
+            Location l = world.getLocation(home);
+            world.setTile(l, this);
+            isOnMap = true;
+        }
+    }
+
     public abstract void reproduce();
 
     public void setTarget(Location location) {

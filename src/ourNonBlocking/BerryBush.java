@@ -1,19 +1,23 @@
-package ourActors.nonBlocking;
+package ourNonBlocking;
 
-import itumulator.simulator.Actor;
-import itumulator.world.*;
 import Main.Main;
+import itumulator.world.Location;
+import itumulator.world.World;
+import methodHelpers.DisplayChanger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+public class BerryBush extends Foliage {
+    DisplayChanger displayChanger;
 
-public class Grass extends Foliage {
-    public Grass (World world) {
+    public BerryBush(World world) {
         super(world);
     }
 
     protected void spread(Location location) {
-        if (r.nextInt(2) == 0 && Main.getNonBlockingObjects() != (Main.getSize() * Main.getSize())) {
+        if (r.nextInt( 10) == 0 && Main.getNonBlockingObjects() != (Main.getSize() * Main.getSize())) {
 
             Set<Location> set = world.getSurroundingTiles();
             List<Location> list = new ArrayList<>(set);
@@ -39,4 +43,5 @@ public class Grass extends Foliage {
             }
         }
     }
+
 }

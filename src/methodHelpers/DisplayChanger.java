@@ -2,12 +2,13 @@ package methodHelpers;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
-import ourActors.blocking.Bear;
-import ourActors.blocking.Rabbit;
-import ourActors.blocking.Wolf;
-import ourActors.nonBlocking.BerryBush;
-import ourActors.nonBlocking.Grass;
+import ourActors.Bear;
+import ourActors.Rabbit;
+import ourActors.Wolf;
+import ourNonBlocking.BerryBush;
+import ourNonBlocking.Grass;
 import ourNonBlocking.RabbitHole;
+import ourNonBlocking.WolfDen;
 
 import java.awt.*;
 
@@ -17,6 +18,7 @@ public class DisplayChanger {
 
     public DisplayChanger(Program program) {
         this.program = program;
+        initializeDisplays();
     }
 
     public static void initializeDisplays() {
@@ -26,11 +28,14 @@ public class DisplayChanger {
         DisplayInformation rabbitDi = new DisplayInformation(Color.blue, "rabbit-small");
         program.setDisplayInformation(Rabbit.class, rabbitDi);
 
-        DisplayInformation rabbitHoleDi = new DisplayInformation(Color.yellow, "hole");
+        DisplayInformation rabbitHoleDi = new DisplayInformation(Color.yellow, "hole-small");
         program.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
         DisplayInformation wolfDi = new DisplayInformation(Color.red, "wolf-small");
         program.setDisplayInformation(Wolf.class, wolfDi);
+
+        DisplayInformation wolfDenDi = new DisplayInformation(Color.orange, "hole");
+        program.setDisplayInformation(WolfDen.class, wolfDenDi);
 
         DisplayInformation bearDi = new DisplayInformation(Color.cyan, "bear-small");
         program.setDisplayInformation(Bear.class, bearDi);

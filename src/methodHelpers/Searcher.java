@@ -1,6 +1,6 @@
 package methodHelpers;
 
-import ourActors.nonBlocking.Grass;
+import ourNonBlocking.Grass;
 import itumulator.world.Location;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;

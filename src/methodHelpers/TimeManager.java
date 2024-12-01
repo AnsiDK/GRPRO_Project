@@ -1,6 +1,6 @@
 package methodHelpers;
 
-import ourActors.blocking.Animal;
+import ourActors.Animal;
 
 public class TimeManager {
     private boolean isDay;

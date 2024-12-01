@@ -1,22 +1,18 @@
 package Main;
 
-import java.awt.Color;
-
-import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
 import itumulator.world.Location;
 import methodHelpers.DisplayChanger;
-import ourActors.blocking.Bear;
-import ourActors.blocking.Rabbit;
-import ourActors.blocking.Wolf;
-import ourActors.nonBlocking.Grass;
+import ourActors.Bear;
+import ourActors.Rabbit;
+import ourActors.WolfPack;
+import ourNonBlocking.Grass;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
-import ourActors.nonBlocking.BerryBush;
 
 
 public class Main {
@@ -57,7 +53,7 @@ public class Main {
         */
 
         //Rabbit and Rabbithole test
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 3; i++) {
             Location l = rLoc.getRandomLocation();
             Location l2 = rLoc.getRandomLocation();
             w.setTile(l, new Rabbit(w));
@@ -65,9 +61,10 @@ public class Main {
         }
 
         Location l = rLoc.getRandomLocation();
-        //new WolfPack(w, 3, l);
+        new WolfPack(w, 3, l);
 
-        w.setTile(l, new Bear(w, l));
+        l = rLoc.getRandomLocation();
+        //w.setTile(l, new Bear(w, l));
 
         //Test * * * * *
 

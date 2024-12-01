@@ -1,15 +1,11 @@
-package ourActors.nonBlocking;
+package ourNonBlocking;
 
-import Main.Main;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 public abstract class Foliage implements NonBlocking, Actor {
     protected World world;
