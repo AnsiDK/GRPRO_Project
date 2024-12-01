@@ -1,6 +1,6 @@
 package methodHelpers;
 
-import ourActors.Grass;
+import ourActors.nonBlocking.Grass;
 import itumulator.world.Location;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
@@ -8,7 +8,7 @@ import itumulator.world.World;
 import java.util.Set;
 
 public class Searcher {
-    static private World world;
+    static protected World world;
 
     public Searcher(World world) {
         super();

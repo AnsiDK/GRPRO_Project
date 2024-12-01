@@ -1,7 +1,7 @@
-package ourActors;
+package ourActors.blocking;
 
 import Main.Main;
-import itumulator.simulator.Actor;
+import ourActors.nonBlocking.Grass;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 import itumulator.world.Location;
@@ -9,7 +9,7 @@ import methodHelpers.TimeManager;
 import methodHelpers.Searcher;
 import java.util.*;
 
-public class Rabbit extends Animal{
+public class Rabbit extends Animal {
 
     public Rabbit(World world) {
         super(world);

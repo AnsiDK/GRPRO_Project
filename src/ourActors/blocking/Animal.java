@@ -1,4 +1,4 @@
-package ourActors;
+package ourActors.blocking;
 
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
@@ -25,6 +25,7 @@ public abstract class Animal implements Actor {
 
     public Animal(World world) {
         this.world = world;
+        r = new Random();
     }
 
     @Override

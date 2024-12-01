@@ -1,8 +1,8 @@
 package ourNonBlocking;
 
 import Main.Main;
-import ourActors.Grass;
-import ourActors.Rabbit;
+import ourActors.nonBlocking.Grass;
+import ourActors.blocking.Rabbit;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;

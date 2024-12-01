@@ -4,17 +4,19 @@ import java.awt.Color;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
-import ourActors.Grass;
-import ourActors.Rabbit;
 import itumulator.world.Location;
-import ourActors.Wolf;
-import ourActors.WolfPack;
+import methodHelpers.DisplayChanger;
+import ourActors.blocking.Bear;
+import ourActors.blocking.Rabbit;
+import ourActors.blocking.Wolf;
+import ourActors.nonBlocking.Grass;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import ourActors.nonBlocking.BerryBush;
 
 
 public class Main {
@@ -23,6 +25,7 @@ public class Main {
     final static Random r = new Random();
     static RandomLocationHelper rLoc;
     static World w;
+    static DisplayChanger displayChanger;
 
     public static void main(String[] args) {
         Map<String, String> input = fileImport();
@@ -44,27 +47,17 @@ public class Main {
         //Initialize RandomLocationHelper
         rLoc = new RandomLocationHelper(w);
 
+        //Initialize displayChnager
+        displayChanger = new DisplayChanger(p);
+
         /*
         for (String name : input.keySet()) {
             spawnStuff(name, input);
         }
         */
 
-
-        DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
-        p.setDisplayInformation(Grass.class, grassDi);
-
-        DisplayInformation rabbitDi = new DisplayInformation(Color.blue, "rabbit-small");
-        p.setDisplayInformation(Rabbit.class, rabbitDi);
-
-        DisplayInformation rabbitHoleDi = new DisplayInformation(Color.yellow, "hole");
-        p.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
-
-        DisplayInformation wolfDi = new DisplayInformation(Color.red, "wolf-small");
-        p.setDisplayInformation(Wolf.class, wolfDi);
-
         //Rabbit and Rabbithole test
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < 1; i++) {
             Location l = rLoc.getRandomLocation();
             Location l2 = rLoc.getRandomLocation();
             w.setTile(l, new Rabbit(w));
@@ -72,7 +65,10 @@ public class Main {
         }
 
         Location l = rLoc.getRandomLocation();
-        new WolfPack(w, 3, l);
+        //new WolfPack(w, 3, l);
+
+        w.setTile(l, new Bear(w, l));
+
         //Test * * * * *
 
         p.show();
@@ -194,14 +190,7 @@ public class Main {
 
     // Find a location for a NonBlocking object
     public static Location nonBlockingLocation() {
-        Location l = new Location(r.nextInt(size), r.nextInt(size));
-
-        while (w.containsNonBlocking(l)) {
-            l = new Location(r.nextInt(size), r.nextInt(size));
-        }
-
-        nonBlockingObjects++;
-        return l;
+        return rLoc.getNonBlockingLocation();
     }
 
     // Find a location for a Blocking object
@@ -209,9 +198,7 @@ public class Main {
         return rLoc.getRandomLocation();
     }
 
-    public static int getNonBlockingObjects() {          //Get the amount of grass in the world
-        return nonBlockingObjects;
-    }
+    public static int getNonBlockingObjects() { return nonBlockingObjects; }
 
     public static void setNonBlockingObjects(int value) {           //"Change" the amount of grass in the world
         nonBlockingObjects = value;

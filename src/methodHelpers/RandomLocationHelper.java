@@ -11,7 +11,6 @@ import java.util.Set;
 
 public class RandomLocationHelper extends Searcher{
     Random r = new Random();
-    static World world;
 
     public RandomLocationHelper(World world) {
         super(world);
@@ -29,6 +28,14 @@ public class RandomLocationHelper extends Searcher{
     public Location getRandomNonRabbitHoleLocation() {
         Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
         while (world.getNonBlocking(l) instanceof RabbitHole) {
+            l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+        }
+        return l;
+    }
+
+    public Location getNonBlockingLocation() {
+        Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+        while (world.getNonBlocking(l) != null) {
             l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
         }
         return l;

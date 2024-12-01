@@ -1,9 +1,8 @@
-package ourActors;
+package ourActors.blocking;
 
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
-import methodHelpers.Searcher;
 
 import java.util.*;
 
@@ -23,7 +22,7 @@ public class WolfPack {
         wolfPackID = hashCode();
         this.spawnLocation = spawnLocation;
         r = new Random();
-        RandomLocationHelper randomLocationHelper = new RandomLocationHelper(world);
+        randomLocationHelper = new RandomLocationHelper(world);
 
         spawnWolfPack();
     }
@@ -40,12 +39,17 @@ public class WolfPack {
 
     private void spawnWolvesAroundPackLeader() {
         List<Location> spawnPoints = new ArrayList<>(RandomLocationHelper.getMoreEmptySurroundingTiles(spawnLocation, 1));
-
-        world.setTile(spawnPoints.get(r.nextInt(spawnPoints.size())), new Wolf(world, this, wolfPackID));
+        Wolf newWolf = new Wolf(world, this, wolfPackID);
+        wolves.add(newWolf);
+        world.setTile(spawnPoints.get(r.nextInt(spawnPoints.size())), newWolf);
     }
 
 
     public Wolf getPackLeader() {
         return wolves.get(0);
+    }
+
+    public int getWolvesAmount() {
+        return wolves.size();
     }
 }

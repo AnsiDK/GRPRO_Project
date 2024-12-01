@@ -1,4 +1,4 @@
-package ourActors;
+package ourActors.blocking;
 
 import itumulator.world.Location;
 import itumulator.world.World;
@@ -38,12 +38,12 @@ public class Wolf extends Animal {
 
         if (isOnMap) {
             Location l = world.getCurrentLocation();
-            Location rabbit = Searcher.searchForObject(Rabbit.class, l, 3);
+            Location rabbit = searcher.searchForObject(Rabbit.class, l, 3);
             if(rabbit != null) {
                 setTarget(rabbit);
             }
 
-            if (!isPackLeader && distFromPackLeader() > 3) {
+            if (!isPackLeader && distFromPackLeader() > 3 && foodEaten != 0) {
                 Location packLeaderLocation = world.getLocation(wolfPack.getPackLeader());
                 setTarget(packLeaderLocation);
             }
