@@ -45,7 +45,6 @@ public class Wolf extends Animal {
                 setTarget(rabbit);
             }
 
-
             //I do not know how this piece of shit code is ever accssesed while the wolf is not on the map...
             try {
                 if (!isPackLeader && distFromPackLeader() > 3 && foodEaten != 0) {
