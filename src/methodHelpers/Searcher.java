@@ -1,5 +1,6 @@
 package methodHelpers;
 
+import ourNonBlocking.Foliage;
 import ourNonBlocking.Grass;
 import itumulator.world.Location;
 import ourNonBlocking.RabbitHole;
@@ -41,8 +42,8 @@ public class Searcher {
         return false;
     }
 
-    public boolean grassAt(Location l) {
-        return world.getNonBlocking(l) instanceof Grass;
+    public boolean foliageAt(Location l) {
+        return world.getNonBlocking(l) instanceof Foliage;
     }
 
     //Distance helper

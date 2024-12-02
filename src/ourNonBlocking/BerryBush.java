@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class BerryBush extends Foliage {
     DisplayChanger displayChanger;
-    protected boolean hasBerries;
+    protected boolean hasBerries = false;
 
     public BerryBush(World world) {
         super(world);
@@ -52,8 +52,10 @@ public class BerryBush extends Foliage {
     }
 
     protected void grow() {
-        if (r.nextInt( 5) == 0) {
-            hasBerries = true;
+        if (hasBerries == false) {
+            if (r.nextInt(5) == 0) {
+                hasBerries = true;
+            }
         }
     }
 

@@ -23,11 +23,7 @@ public class Bear extends Animal {
     void actDay() {
         serchForFood();
 
-        if (foodEaten == 0) {
-
-        }
-
-        if (searcher.getDistance(world.getCurrentLocation(), territoryCenter) > 4) {
+        if (searcher.getDistance(world.getCurrentLocation(), territoryCenter) > 4 && foodEaten != 0) {
             setTarget(territoryCenter);
         }
 
@@ -51,10 +47,12 @@ public class Bear extends Animal {
             foodEaten++;
         }
 
-        else if (world.getTile(target) instanceof BerryBush) {
-            BerryBush berryBush = (BerryBush) world.getTile(target);
-            berryBush.eatBerry();
-            foodEaten++;
+        else if (world.getNonBlocking(target) instanceof BerryBush) {
+            BerryBush berryBush = (BerryBush) world.getNonBlocking(target);
+            if (berryBush.getBerries()) {
+                berryBush.eatBerry();
+                foodEaten++;
+            }
         }
     }
 

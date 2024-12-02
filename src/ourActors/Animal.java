@@ -78,6 +78,12 @@ public abstract class Animal implements Actor {
             return;
         }
 
+        if (world.getTile(move) instanceof Animal && this instanceof Bear) {
+            performAction();
+            target = null;
+            return;
+        }
+
         if (world.isTileEmpty(move)) {
             //Move closer to the target
             world.move(this, move);

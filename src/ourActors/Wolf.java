@@ -4,6 +4,7 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
+import ourNonBlocking.Foliage;
 import ourNonBlocking.RabbitHole;
 import ourNonBlocking.WolfDen;
 
@@ -105,11 +106,14 @@ public class Wolf extends Animal {
     void buildHome() {
         Location l = world.getLocation(this);
 
-        if (searcher.grassAt(l)) {
+        if (searcher.foliageAt(l)) {
             world.delete(world.getNonBlocking(l));
         }
 
         WolfDen wolfDen = new WolfDen(world);
+        if (world.getNonBlocking(world.getLocation(this)) instanceof Foliage) {
+            world.delete(world.getNonBlocking(world.getLocation(this)));
+        }
         world.setTile(l, wolfDen);
         wolfPack.buildDen(wolfDen);
     }

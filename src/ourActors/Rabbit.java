@@ -84,7 +84,7 @@ public class Rabbit extends Animal {
     @Override
     void moveRandomly() {
         super.moveRandomly();
-        if (r.nextInt(foodEaten + 2) == 0 && searcher.grassAt(world.getLocation(this))) {
+        if (r.nextInt(foodEaten + 2) == 0 && searcher.foliageAt(world.getLocation(this))) {
             eatGrass();
         }
     }
@@ -115,7 +115,7 @@ public class Rabbit extends Animal {
     public void buildHome () {
         Location l = world.getLocation(this);
 
-        if (searcher.grassAt(l)) {
+        if (searcher.foliageAt(l)) {
             world.delete(world.getNonBlocking(l));
         }
 

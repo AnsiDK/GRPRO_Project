@@ -54,21 +54,22 @@ public class Main {
         */
 
         //Testing * * * * *
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 6; i++) {
             Location l = rLoc.getRandomLocation();
-            Location l2 = rLoc.getRandomLocation();
             w.setTile(l, new Rabbit(w));
-            w.setTile(l2, new Grass(w));
+            l = rLoc.getRandomLocation();
+            w.setTile(l, new Grass(w));
+            l = rLoc.getRandomLocation();
+            w.setTile(l, new BerryBush(w));
         }
 
         Location l = rLoc.getRandomLocation();
-        //new WolfPack(w, 3, l);
+        new WolfPack(w, 3, l);
 
         l = rLoc.getRandomLocation();
         w.setTile(l, new Bear(w, l));
 
-        l = rLoc.getRandomLocation();
-        //w.setTile(l, new BerryBush(w));
+
 
         //Testing * * * * *
 
