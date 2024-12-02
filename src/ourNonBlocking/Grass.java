@@ -33,8 +33,6 @@ public class Grass extends Foliage {
                 }
 
                 world.setTile(l, new Grass(world));
-                int grass = Main.getNonBlockingObjects();
-                Main.setNonBlockingObjects(grass + 1);
             }
         }
     }

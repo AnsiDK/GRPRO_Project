@@ -4,6 +4,7 @@ package ourActors;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
+import ourNonBlocking.BerryBush;
 import ourNonBlocking.Grass;
 
 import java.util.*;
@@ -20,7 +21,6 @@ public class Bear extends Animal {
 
     @Override
     void actDay() {
-
         serchForFood();
 
         if (foodEaten == 0) {
@@ -45,19 +45,17 @@ public class Bear extends Animal {
 
     @Override
     void performAction() {
-        if (world.getTile(target) instanceof Animal) {
+        if (world.getTile(target) instanceof Animal && !(world.getTile(target) instanceof Bear)) {
             Animal animal = (Animal) world.getTile(target);
             animal.die();
             foodEaten++;
         }
 
-        /*
-        else if (world.getTile(target) instanceof berryBush) {
+        else if (world.getTile(target) instanceof BerryBush) {
             BerryBush berryBush = (BerryBush) world.getTile(target);
             berryBush.eatBerry();
             foodEaten++;
         }
-         */
     }
 
     @Override
@@ -76,31 +74,21 @@ public class Bear extends Animal {
     }
 
     void serchForFood() {
-        Map<Object, Location> entities = world.getEntities();
+        if (searcher.isInVicinity(territoryCenter, Wolf.class, 3)) {
+            Location l = Searcher.searchForObject(Wolf.class, territoryCenter, 3);
+            setTarget(l);
+        }
 
-        //Problem here, somehow entities is always null
+        if (searcher.isInVicinity(territoryCenter, Rabbit.class, 3)) {
+            Location l = Searcher.searchForObject(Rabbit.class, territoryCenter, 3);
+            setTarget(l);
+        }
 
-        for (Object food : entities.entrySet()) {
-
-            Location l = entities.get(food);
-
-            //Problem here, somehow, the location is always null
-
-            if (l != null) {
-                System.out.println("Looking for food");
-                if (searcher.getDistance(l, territoryCenter) > 4) {
-                    if (world.getTile(l) instanceof Rabbit) {
-                        System.out.println("found Rabbit in territory");
-                        setTarget(l);
-                    }
-                    if (food instanceof Wolf) {
-                        setTarget(l);
-                    }
-                    if (food instanceof Grass) {
-                        System.out.println("found grass in territory");
-                        setTarget(l);
-                    }
-                }
+        if (searcher.isInVicinity(territoryCenter, BerryBush.class, 3)) {
+            Location l = Searcher.searchForObject(BerryBush.class, territoryCenter, 3);
+            BerryBush berryBush = (BerryBush) world.getTile(l);
+            if (berryBush.getBerries()) {
+                setTarget(l);
             }
         }
     }

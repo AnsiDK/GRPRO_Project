@@ -1,19 +1,28 @@
 package ourNonBlocking;
 
 import Main.Main;
+import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.DisplayChanger;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class BerryBush extends Foliage {
     DisplayChanger displayChanger;
+    protected boolean hasBerries;
 
     public BerryBush(World world) {
         super(world);
+    }
+
+    @Override
+    public void act(World world) {
+        grow();
+        super.act(world);
     }
 
     protected void spread(Location location) {
@@ -37,11 +46,22 @@ public class BerryBush extends Foliage {
                     l = list.get(r.nextInt(list.size()));
                 }
 
-                world.setTile(l, new Grass(world));
-                int grass = Main.getNonBlockingObjects();
-                Main.setNonBlockingObjects(grass + 1);
+                world.setTile(l, new BerryBush(world));
             }
         }
     }
 
+    protected void grow() {
+        if (r.nextInt( 5) == 0) {
+            hasBerries = true;
+        }
+    }
+
+    public boolean getBerries() {
+        return hasBerries;
+    }
+
+    public void eatBerry() {
+        hasBerries = false;
+    }
 }

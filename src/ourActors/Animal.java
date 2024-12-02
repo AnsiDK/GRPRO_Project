@@ -97,6 +97,7 @@ public abstract class Animal implements Actor {
     abstract void performAction();
     public abstract void findHome();
     abstract void buildHome();
+
     protected void enterHome() {
         isOnMap = false;
         home.addAnimal(this);

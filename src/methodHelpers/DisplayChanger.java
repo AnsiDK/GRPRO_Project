@@ -45,6 +45,38 @@ public class DisplayChanger {
     }
 
     public static void changeSprite(Object object, boolean grow) {
-        //What the hell do i do here????
+
+    }
+
+    public DisplayInformation changeBerryBushSprite(BerryBush bush) {
+        if (bush.getBerries()) {
+            return new DisplayInformation(Color.red, "bush-berries");
+        } else {
+            return new DisplayInformation(Color.blue, "bush");
+        }
+    }
+
+    public DisplayInformation changeRabbitSprite(Rabbit rabbit) {
+        if (rabbit.hasGrown()) {
+            return new DisplayInformation(Color.green, "rabbit");
+        } else {
+            return new DisplayInformation(Color.yellow, "rabbit-small");
+        }
+    }
+
+    public DisplayInformation changeWolfSprite(Wolf wolf) {
+        if (wolf.hasGrown()) {
+            return new DisplayInformation(Color.green, "wolf");
+        } else {
+            return new DisplayInformation(Color.yellow, "wolf-small");
+        }
+    }
+
+    public DisplayInformation changBearSprite(Bear bear) {
+        if (bear.hasGrown()) {
+            return new DisplayInformation(Color.green, "bear");
+        } else {
+            return new DisplayInformation(Color.yellow, "bear-small");
+        }
     }
 }

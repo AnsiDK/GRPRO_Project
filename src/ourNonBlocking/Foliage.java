@@ -1,5 +1,6 @@
 package ourNonBlocking;
 
+import Main.Main;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
@@ -15,6 +16,7 @@ public abstract class Foliage implements NonBlocking, Actor {
         super();
         this.world = world;
         r = new Random();
+        Main.setNonBlockingObjects(Main.getNonBlockingObjects()+1);
     }
 
     @Override

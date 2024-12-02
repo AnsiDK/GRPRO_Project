@@ -1,13 +1,12 @@
 package ourNonBlocking;
 
+import Main.Main;
 import itumulator.world.Location;
 import itumulator.world.NonBlocking;
 import itumulator.world.World;
-import methodHelpers.RandomLocationHelper;
 import ourActors.*;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public abstract class Home implements NonBlocking {
     protected Location location;
@@ -19,6 +18,7 @@ public abstract class Home implements NonBlocking {
         animals = new ArrayList<>();
         this.world = world;
         location = world.getCurrentLocation();
+        Main.setNonBlockingObjects(Main.getNonBlockingObjects()+1);
     }
 
     //Getter for the location of the home

@@ -81,14 +81,9 @@ public class Rabbit extends Animal {
     }
 
     //The bunny moves to a random location in its vicinity
+    @Override
     void moveRandomly() {
-        Set<Location> set = world.getEmptySurroundingTiles();
-        List<Location> list = new ArrayList<>(set);
-        if (!list.isEmpty()) {
-            Location loc = list.get(r.nextInt(list.size()));
-
-            world.move(this, loc);
-        }
+        super.moveRandomly();
         if (r.nextInt(foodEaten + 2) == 0 && searcher.grassAt(world.getLocation(this))) {
             eatGrass();
         }

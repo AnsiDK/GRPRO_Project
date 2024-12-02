@@ -32,8 +32,8 @@ public class Searcher {
         Set<Location> set = world.getSurroundingTiles(l, radius);
 
         for (Location location : set) {
-            if (world.getNonBlocking(location) != null) {
-                if (world.getNonBlocking(location).getClass() == clazz) {
+            if (world.getTile(location) != null) {
+                if (world.getTile(location).getClass() == clazz) {
                     return true;
                 }
             }
@@ -43,10 +43,6 @@ public class Searcher {
 
     public boolean grassAt(Location l) {
         return world.getNonBlocking(l) instanceof Grass;
-    }
-
-    public boolean rabbitHoleAt(Location l) {
-        return world.getNonBlocking(l) instanceof RabbitHole;
     }
 
     //Distance helper

@@ -36,7 +36,7 @@ public class Wolf extends Animal {
 
     @Override
     public void actDay() {
-        //timeManager.updateTime(true);
+        timeManager.updateTime(true);
 
         if (isOnMap) {
             Location l = world.getCurrentLocation();

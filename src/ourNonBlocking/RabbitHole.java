@@ -32,8 +32,6 @@ public class RabbitHole extends Home {
         Location newHoleLocation = rLoc.getRandomNonRabbitHoleLocation();
         if (world.getNonBlocking(newHoleLocation) instanceof Grass) {
             world.delete(world.getNonBlocking(newHoleLocation));
-        } else {
-            Main.setNonBlockingObjects(Main.getNonBlockingObjects()+1);
         }
 
         RabbitHole newHole = new RabbitHole(world);
