@@ -50,7 +50,7 @@ public class Searcher {
     }
 
     //Distance helper
-    public double getDistance(Location a, Location b) {
+    public static double getDistance(Location a, Location b) {
         return Math.sqrt(Math.pow(b.getX() - a.getX(), 2) + Math.pow(b.getY() - a.getY(), 2));
     }
 }

@@ -5,6 +5,7 @@ import itumulator.world.RabbitHole;
 import itumulator.world.World;
 import itumulator.world.Location;
 import methodHelpers.RandomLocationHelper;
+import methodHelpers.Searcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -211,6 +212,8 @@ public class Tests {
     public void Test12g () {
         CreateWorld("week-1/t1-fg");
 
+        boolean goToHole = false;
+
         Map<Object, Location> objects = w.getEntities();
 
         Rabbit rabbit = null;
@@ -226,11 +229,73 @@ public class Tests {
             p.simulate();
         }
 
-        RabbitHole hole = rabbit.getHole();
+        RabbitHole hole = rabbit.hole;
 
         Location locRabBefore = w.getLocation(rabbit);
         Location locHol = w.getLocation(hole);
 
+        double dist = Searcher.getDistance(locRabBefore, locHol);
+
+        p.simulate();
+
+        Location locRabAfter = w.getLocation(rabbit);
+
+        double distAfter = Searcher.getDistance(locRabAfter, locHol);
+
+        if (dist > distAfter) {
+            goToHole = true;
+        }
+
+        assertTrue(goToHole);
+    }
+
+    @Test
+    public void Test13a () {
+        CreateWorld("week-1/t1-3a");
+
+        Map<Object, Location> objects = w.getEntities();
+
+        boolean placedHole = false;
+        boolean dugHole = false;
+
+        Rabbit rabbit = null;
+
+        for (Object o : objects.keySet()) {
+            if (o == RabbitHole.class) {
+                placedHole = true;
+            } else if (o == Rabbit.class) {
+                Location loc = objects.get(o);
+                rabbit = (Rabbit) w.getTile(loc);
+            }
+        }
+
+        for (int i = 0; i < 10; i++) {
+            p.simulate();
+        }
+
+        objects = w.getEntities();
+
+        int holes = 0;
+
+        for (Object o : objects.keySet()) {
+            if (o == RabbitHole.class) {
+                holes++;
+            }
+        }
+
+        if (holes > 1) {
+            dugHole = true;
+        }
+
+        assertTrue(placedHole);
+        assertTrue(dugHole);
+    }
+
+    @Test
+    public void Test13b () {
+        CreateWorld("week-1/t1-3b");
+
+        Map<Object, Location> objects = w.getEntities();
 
     }
 
