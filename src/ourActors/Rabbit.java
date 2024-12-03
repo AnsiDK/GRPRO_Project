@@ -150,4 +150,8 @@ public class Rabbit extends Animal {
             setTarget(null);
         }
     }
+
+    public RabbitHole getHome() {
+        return (RabbitHole) home;
+    }
 }

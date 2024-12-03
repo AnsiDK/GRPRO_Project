@@ -81,7 +81,7 @@ public class Main {
     }
 
     //Imports a random file from week-1 folder
-    static Map<String, String> fileImport() {
+    public static Map<String, String> fileImport() {
 
         String folderPath = "week-1";
 

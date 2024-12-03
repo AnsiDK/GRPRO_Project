@@ -1,12 +1,9 @@
 import itumulator.executable.Program;
-import itumulator.simulator.Grass;
-import itumulator.simulator.Rabbit;
-import itumulator.world.RabbitHole;
+import ourActors.Rabbit;
+import ourNonBlocking.*;
 import itumulator.world.World;
 import itumulator.world.Location;
-import methodHelpers.RandomLocationHelper;
 import methodHelpers.Searcher;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -230,7 +227,7 @@ public class Tests {
             p.simulate();
         }
 
-        RabbitHole hole = rabbit.hole;
+        RabbitHole hole = rabbit.getHome();
 
         Location locRabBefore = w.getLocation(rabbit);
         Location locHol = w.getLocation(hole);
