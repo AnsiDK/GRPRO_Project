@@ -2,6 +2,7 @@ package ourNonBlocking;
 
 import Main.Main;
 import itumulator.executable.DisplayInformation;
+import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.DisplayChanger;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class BerryBush extends Foliage {
+public class BerryBush extends Foliage implements DynamicDisplayInformationProvider {
     DisplayChanger displayChanger;
     protected boolean hasBerries = false;
 
@@ -65,5 +66,14 @@ public class BerryBush extends Foliage {
 
     public void eatBerry() {
         hasBerries = false;
+    }
+
+    @Override
+    public DisplayInformation getInformation() {
+        if (hasBerries) {
+            return new DisplayInformation(Color.red, "bush-berries");
+        } else {
+            return new DisplayInformation(Color.blue, "bush");
+        }
     }
 }

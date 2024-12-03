@@ -34,6 +34,6 @@ public class TimeManager {
     }
 
     public void checkReproduce() {
-        if (animal.getFoodEaten() > 2 && animal.hasGrown()) { animal.reproduce(); };
+        if (animal.getFoodEaten() > 2 && animal.getHasGrown()) { animal.reproduce(); };
     }
 }

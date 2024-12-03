@@ -45,7 +45,7 @@ public abstract class Home implements NonBlocking {
         int grownCount = 0;
 
         for (Animal animal : animals) {
-            if (animal.hasGrown()) {
+            if (animal.getHasGrown()) {
                 grownCount++;
             }
         }

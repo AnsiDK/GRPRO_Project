@@ -1,5 +1,7 @@
 package ourActors;
 
+import itumulator.executable.DisplayInformation;
+import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
 import itumulator.world.Location;
 import itumulator.world.World;
@@ -7,14 +9,16 @@ import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
 import ourNonBlocking.Home;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
-public abstract class Animal implements Actor {
+public abstract class Animal implements Actor, DynamicDisplayInformationProvider {
     protected World world;
     protected Random r;
     protected int age = 0;
     protected boolean isOnMap = true;
-    protected boolean hasGrown = false;
+    protected boolean hasGrown;
     public Home home;
     protected Location target;
     protected int foodEaten = 0;
@@ -25,6 +29,23 @@ public abstract class Animal implements Actor {
     public Animal(World world) {
         this.world = world;
         r = new Random();
+        hasGrown = false;
+    }
+
+    @Override
+    public DisplayInformation getInformation() {
+        String name = (this.getClass().getSimpleName()).toLowerCase();
+
+        boolean amIAdult = getHasGrown();
+
+        System.out.println("I have lived " + stepsLived + " steps");
+        System.out.println("have i grown: " + amIAdult);
+
+        if (hasGrown) {
+            return new DisplayInformation(Color.red, name);
+        } else {
+            return new DisplayInformation(Color.black, name + "-small");
+        }
     }
 
     @Override
@@ -153,7 +174,7 @@ public abstract class Animal implements Actor {
         return isOnMap;
     }
 
-    public boolean hasGrown() {
+    public boolean getHasGrown() {
         return hasGrown;
     }
 

@@ -64,10 +64,10 @@ public class Main {
         }
 
         Location l = rLoc.getRandomLocation();
-        new WolfPack(w, 3, l);
+        //new WolfPack(w, 3, l);
 
         l = rLoc.getRandomLocation();
-        w.setTile(l, new Bear(w, l));
+        //w.setTile(l, new Bear(w, l));
 
 
 
