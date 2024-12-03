@@ -35,12 +35,6 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     @Override
     public DisplayInformation getInformation() {
         String name = (this.getClass().getSimpleName()).toLowerCase();
-
-        boolean amIAdult = getHasGrown();
-
-        System.out.println("I have lived " + stepsLived + " steps");
-        System.out.println("have i grown: " + amIAdult);
-
         if (hasGrown) {
             return new DisplayInformation(Color.red, name);
         } else {
@@ -150,7 +144,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     public void updateAge() {
         stepsLived++;
         if (stepsLived % 20 == 0) { age++; }
-        if (age % 3 == 0) { grow(); }
+        if (age % 3 == 0 && age != 0) { grow(); }
     }
 
     public void grow(){

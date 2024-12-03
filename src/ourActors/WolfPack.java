@@ -46,13 +46,8 @@ public class WolfPack {
         world.setTile(spawnPoints.get(r.nextInt(spawnPoints.size())), newWolf);
     }
 
-
     public Wolf getPackLeader() {
         return wolves.get(0);
-    }
-
-    public int getWolvesAmount() {
-        return wolves.size();
     }
 
     public void buildDen(WolfDen wolfDen) {
@@ -60,9 +55,5 @@ public class WolfPack {
         for (Wolf w : wolves) {
             w.setHome(wolfDen);
         }
-    }
-
-    public WolfDen getWolfDen() {
-        return wolfDen;
     }
 }
