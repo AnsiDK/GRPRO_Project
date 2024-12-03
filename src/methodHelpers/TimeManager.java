@@ -1,15 +1,14 @@
 package methodHelpers;
 
-import itumulator.simulator.Rabbit;
-import itumulator.world.World;
+import ourActors.Animal;
 
 public class TimeManager {
     private boolean isDay;
-    Rabbit rabbit;
+    Animal animal;
 
-    public TimeManager(Rabbit rabbit) {
+    public TimeManager(Animal animal) {
         super();
-        this.rabbit = rabbit;
+        this.animal = animal;
     }
 
     public void updateTime(boolean dayOrNight) {
@@ -18,23 +17,23 @@ public class TimeManager {
             isDay = dayOrNight;
             if (!isDay) {
                 checkHunger();
-                if (rabbit.isOnMap()) {
-                    rabbit.findHole();
+                if (animal.isOnMap()) {
+                    animal.findHome();
                 }
             }
             if (isDay) {
                 checkReproduce();
-                rabbit.setEatenGrass(0);
+                animal.setFoodEaten(0);
 
             }
         }
     }
 
     public void checkHunger() {
-        if (rabbit.getEatenGrass() == 0) { rabbit.die(); }
+        if (animal.getFoodEaten() == 0) { animal.die(); }
     }
 
     public void checkReproduce() {
-        if (rabbit.getEatenGrass() > 2 && rabbit.hasGrown()) { rabbit.reproduce(); };
+        if (animal.getFoodEaten() > 2 && animal.hasGrown()) { animal.reproduce(); };
     }
 }

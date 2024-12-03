@@ -1,21 +1,22 @@
 package methodHelpers;
 
-import itumulator.simulator.Grass;
+import ourNonBlocking.Foliage;
+import ourNonBlocking.Grass;
 import itumulator.world.Location;
-import itumulator.world.RabbitHole;
+import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
 
 import java.util.Set;
 
 public class Searcher {
-    static private World world;
+    static protected World world;
 
     public Searcher(World world) {
         super();
         this.world = world;
     }
 
-    public Location searchForObject(Class<?> clazz, Location l, int radius) {
+    public static Location searchForObject(Class<?> clazz, Location l, int radius) {
         Set<Location> set = world.getSurroundingTiles(l, radius);
 
         for (Location location : set) {
@@ -32,8 +33,8 @@ public class Searcher {
         Set<Location> set = world.getSurroundingTiles(l, radius);
 
         for (Location location : set) {
-            if (world.getNonBlocking(location) != null) {
-                if (world.getNonBlocking(location).getClass() == clazz) {
+            if (world.getTile(location) != null) {
+                if (world.getTile(location).getClass() == clazz) {
                     return true;
                 }
             }
@@ -41,12 +42,8 @@ public class Searcher {
         return false;
     }
 
-    public boolean grassAt(Location l) {
-        return world.getNonBlocking(l) instanceof Grass;
-    }
-
-    public boolean rabbitHoleAt(Location l) {
-        return world.getNonBlocking(l) instanceof RabbitHole;
+    public boolean foliageAt(Location l) {
+        return world.getNonBlocking(l) instanceof Foliage;
     }
 
     //Distance helper
