@@ -5,6 +5,7 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
 import ourNonBlocking.BerryBush;
+import ourNonBlocking.Carcass;
 import ourNonBlocking.Grass;
 
 import java.util.*;
@@ -79,6 +80,11 @@ public class Bear extends Animal {
 
         if (searcher.isInVicinity(territoryCenter, Rabbit.class, 3)) {
             Location l = Searcher.searchForObject(Rabbit.class, territoryCenter, 3);
+            setTarget(l);
+        }
+
+        if (searcher.isInVicinity(territoryCenter, Carcass.class, 3)) {
+            Location l = Searcher.searchForObject(Carcass.class, territoryCenter, 3);
             setTarget(l);
         }
 

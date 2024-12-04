@@ -4,6 +4,7 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
+import ourNonBlocking.Carcass;
 import ourNonBlocking.Foliage;
 import ourNonBlocking.RabbitHole;
 import ourNonBlocking.WolfDen;
@@ -41,9 +42,13 @@ public class Wolf extends Animal {
 
         if (isOnMap) {
             Location l = world.getCurrentLocation();
-            Location rabbit = searcher.searchForObject(Rabbit.class, l, 3);
-            if(rabbit != null) {
-                setTarget(rabbit);
+            Location food = searcher.searchForObject(Rabbit.class, l, 3);
+            if (food == null) {
+                food = searcher.searchForObject(Carcass.class, l, 3);
+            }
+
+            if(food != null) {
+                setTarget(food);
             }
 
             //I do not know how this piece of shit code is ever accssesed while the wolf is not on the map...

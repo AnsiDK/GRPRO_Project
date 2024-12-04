@@ -5,18 +5,15 @@ import itumulator.executable.Program;
 import ourActors.Bear;
 import ourActors.Rabbit;
 import ourActors.Wolf;
-import ourNonBlocking.BerryBush;
-import ourNonBlocking.Grass;
-import ourNonBlocking.RabbitHole;
-import ourNonBlocking.WolfDen;
+import ourNonBlocking.*;
 
 import java.awt.*;
 
-public class DisplayChanger {
+public class DisplayProvider {
 
     private static Program program;
 
-    public DisplayChanger(Program program) {
+    public DisplayProvider(Program program) {
         this.program = program;
         initializeDisplays();
     }
@@ -33,6 +30,9 @@ public class DisplayChanger {
 
         DisplayInformation bushDi = new DisplayInformation(Color.pink, "bush");
         program.setDisplayInformation(BerryBush.class, bushDi);
+
+        DisplayInformation mushRoomDi = new DisplayInformation(Color.yellow, "mushroom");
+        program.setDisplayInformation(MushRoom.class, mushRoomDi);
     }
 
     public static void changeSprite(Object object, boolean grow) {

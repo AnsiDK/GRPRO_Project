@@ -7,6 +7,7 @@ import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
+import ourNonBlocking.Carcass;
 import ourNonBlocking.Home;
 
 import java.awt.*;
@@ -154,6 +155,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     public void die () {
         isOnMap = false;
         world.delete(this);
+        world.setTile(world.getLocation(this, new Carcass(world, energy + 1)));
     }
 
     public int getFoodEaten() {
