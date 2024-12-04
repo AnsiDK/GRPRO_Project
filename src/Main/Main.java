@@ -2,7 +2,7 @@ package Main;
 
 import itumulator.executable.Program;
 import itumulator.world.Location;
-import methodHelpers.DisplayChanger;
+import methodHelpers.DisplayProvider;
 import ourActors.Bear;
 import ourActors.Rabbit;
 import ourActors.WolfPack;
@@ -22,7 +22,7 @@ public class Main {
     final static Random r = new Random();
     static RandomLocationHelper rLoc;
     static World w;
-    static DisplayChanger displayChanger;
+    static DisplayProvider displayChanger;
 
     public static void main(String[] args) {
         Map<String, String> input = fileImport();
@@ -45,7 +45,7 @@ public class Main {
         rLoc = new RandomLocationHelper(w);
 
         //Initialize displayChnager
-        displayChanger = new DisplayChanger(p);
+        displayChanger = new DisplayProvider(p);
 
         /*
         for (String name : input.keySet()) {
