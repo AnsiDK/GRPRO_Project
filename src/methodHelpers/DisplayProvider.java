@@ -22,20 +22,11 @@ public class DisplayProvider {
         DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
         program.setDisplayInformation(Grass.class, grassDi);
 
-        DisplayInformation rabbitDi = new DisplayInformation(Color.blue, "rabbit-small");
-        program.setDisplayInformation(Rabbit.class, rabbitDi);
-
         DisplayInformation rabbitHoleDi = new DisplayInformation(Color.yellow, "hole-small");
         program.setDisplayInformation(RabbitHole.class, rabbitHoleDi);
 
-        DisplayInformation wolfDi = new DisplayInformation(Color.red, "wolf-small");
-        program.setDisplayInformation(Wolf.class, wolfDi);
-
         DisplayInformation wolfDenDi = new DisplayInformation(Color.orange, "hole");
         program.setDisplayInformation(WolfDen.class, wolfDenDi);
-
-        DisplayInformation bearDi = new DisplayInformation(Color.cyan, "bear-small");
-        program.setDisplayInformation(Bear.class, bearDi);
 
         DisplayInformation bushDi = new DisplayInformation(Color.pink, "bush");
         program.setDisplayInformation(BerryBush.class, bushDi);
@@ -53,30 +44,6 @@ public class DisplayProvider {
             return new DisplayInformation(Color.red, "bush-berries");
         } else {
             return new DisplayInformation(Color.blue, "bush");
-        }
-    }
-
-    public DisplayInformation changeRabbitSprite(Rabbit rabbit) {
-        if (rabbit.hasGrown()) {
-            return new DisplayInformation(Color.green, "rabbit");
-        } else {
-            return new DisplayInformation(Color.yellow, "rabbit-small");
-        }
-    }
-
-    public DisplayInformation changeWolfSprite(Wolf wolf) {
-        if (wolf.hasGrown()) {
-            return new DisplayInformation(Color.green, "wolf");
-        } else {
-            return new DisplayInformation(Color.yellow, "wolf-small");
-        }
-    }
-
-    public DisplayInformation changBearSprite(Bear bear) {
-        if (bear.hasGrown()) {
-            return new DisplayInformation(Color.green, "bear");
-        } else {
-            return new DisplayInformation(Color.yellow, "bear-small");
         }
     }
 }
