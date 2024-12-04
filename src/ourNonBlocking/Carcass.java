@@ -3,16 +3,18 @@ package ourNonBlocking;
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.simulator.Actor;
+import itumulator.world.Location;
+import itumulator.world.NonBlocking;
 import itumulator.world.World;
 
 import java.awt.*;
 import java.util.Random;
 
-public class Carcass implements Actor, DynamicDisplayInformationProvider {
+public class Carcass implements Actor, DynamicDisplayInformationProvider, NonBlocking {
     private int energy;
     private World world;
     private Random r;
-    private MushRoom mushRoom;
+    private boolean infested = false;
 
     public Carcass(World world, int energy) {
         super();
@@ -35,14 +37,20 @@ public class Carcass implements Actor, DynamicDisplayInformationProvider {
     }
 
     public void dissapear() {
+        Location l = world.getLocation(this);
+        world.remove(this);
+        if (infested) {
+            Object object = world.getNonBlocking(l);
+            if (object != null) {
+                world.delete(object);
+            }
+            world.setTile(l, new MushRoom(world, energy + 30));
+        }
         world.delete(this);
-        world.setTile(world.getLocation(this), mushRoom);
     }
 
     public void growShrooms() {
-        if (mushRoom == null) {
-            mushRoom = new MushRoom(world, energy + 1);
-        }
+        infested = true;
     }
 
     @Override

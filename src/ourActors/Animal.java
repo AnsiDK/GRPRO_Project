@@ -8,6 +8,7 @@ import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
 import ourNonBlocking.Carcass;
+import ourNonBlocking.Foliage;
 import ourNonBlocking.Home;
 
 import java.awt.*;
@@ -26,6 +27,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     protected int stepsLived = 0;
     protected Searcher searcher;
     protected TimeManager timeManager;
+    protected int energy;
 
     public Animal(World world) {
         this.world = world;
@@ -154,8 +156,13 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
     public void die () {
         isOnMap = false;
+        Location l = world.getLocation(this);
         world.delete(this);
-        world.setTile(world.getLocation(this, new Carcass(world, energy + 1)));
+        Object object = world.getNonBlocking(l);
+        if (object != null) {
+            world.delete(object);
+        }
+        world.setTile(l, new Carcass(world, energy + 1));
     }
 
     public int getFoodEaten() {
