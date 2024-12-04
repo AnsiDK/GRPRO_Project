@@ -40,7 +40,7 @@ public class DisplayProvider {
         DisplayInformation bushDi = new DisplayInformation(Color.pink, "bush");
         program.setDisplayInformation(BerryBush.class, bushDi);
 
-        DisplayInformation mushRoomDi = new DisplayInformation(Color.yellow, "mushroom");
+        DisplayInformation mushRoomDi = new DisplayInformation(Color.yellow, "fungi");
         program.setDisplayInformation(MushRoom.class, mushRoomDi);
     }
 

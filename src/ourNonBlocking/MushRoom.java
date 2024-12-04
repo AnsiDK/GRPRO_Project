@@ -33,7 +33,8 @@ public class MushRoom extends Foliage {
     }
 
     public void dissapear() {
+        Location l = world.getLocation(this);
         world.delete(this);
-        world.setTile(world.getLocation(this), new Grass(world));
+        world.setTile(l, new Grass(world));
     }
 }
