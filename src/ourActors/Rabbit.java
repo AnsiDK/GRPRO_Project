@@ -76,6 +76,7 @@ public class Rabbit extends Animal {
         Main.setNonBlockingObjects(Main.getNonBlockingObjects() - 1);
         if (world.getNonBlocking(world.getLocation(this)) instanceof Grass) {
             foodEaten ++;
+            energyOfAnimal += 2;
             world.delete(world.getNonBlocking(world.getLocation(this)));
         }
     }

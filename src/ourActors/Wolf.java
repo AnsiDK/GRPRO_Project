@@ -133,6 +133,7 @@ public class Wolf extends Animal {
         eatenRabbit.setIsOnMap(false);
         world.delete(eatenRabbit);
         foodEaten++;
+        energyOfAnimal += 2;
     }
 
     private double distFromPackLeader() {
