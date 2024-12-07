@@ -165,6 +165,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         world.setTile(l, new Carcass(world, energy + 1));
     }
 
+
     public int getFoodEaten() {
         return foodEaten;
     }
