@@ -150,6 +150,7 @@ public abstract class Animal implements Actor {
         world.setTile(l, new Carcass(world, energy + 1));
     }
 
+
     public int getFoodEaten() {
         return foodEaten;
     }
