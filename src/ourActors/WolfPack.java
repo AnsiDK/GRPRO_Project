@@ -17,6 +17,12 @@ public class WolfPack {
     RandomLocationHelper randomLocationHelper;
     protected WolfDen wolfDen;
 
+    /**
+     * A constructor for our wolf pack, this is used to make sure all wolves in a pack is automaticly put on the map together
+     * @param world provides information about the world that we have to place stuff in
+     * @param wolfAmount provides the amount of wolves that the wolfpack has to spawn
+     * @param spawnLocation provides the location where the leader wolf should be spawned
+     */
     public WolfPack(World world, int wolfAmount, Location spawnLocation) {
         wolves = new ArrayList<Wolf>();
         this.wolfAmount = wolfAmount;
@@ -29,6 +35,9 @@ public class WolfPack {
         spawnWolfPack();
     }
 
+    /**
+     * A method that spawns a single packleader, then calls "spawnWolvesAroundPackLeader"
+     */
     private void spawnWolfPack() {
         Wolf packLeader = new Wolf(world, this, wolfPackID, true);
         wolves.add(packLeader);
@@ -39,6 +48,9 @@ public class WolfPack {
         }
     }
 
+    /**
+     * A method that uses on of our helperclasses, to make sure it's able to put all wolves on the map, unless of course there is more wolves than size squared.
+     */
     private void spawnWolvesAroundPackLeader() {
         List<Location> spawnPoints = new ArrayList<>(RandomLocationHelper.getMoreEmptySurroundingTiles(spawnLocation, 1));
         Wolf newWolf = new Wolf(world, this, wolfPackID);
@@ -50,6 +62,10 @@ public class WolfPack {
         return wolves.get(0);
     }
 
+    /**
+     * A method that ensures that whenever a wolf den is built it is assigned to all wolves in the pack.
+     * @param wolfDen provides the wolfDen that is to be assigned to the rest of the wolfPack
+     */
     public void buildDen(WolfDen wolfDen) {
         this.wolfDen = wolfDen;
         for (Wolf w : wolves) {

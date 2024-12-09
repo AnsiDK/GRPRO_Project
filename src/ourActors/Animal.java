@@ -29,10 +29,15 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     protected TimeManager timeManager;
     protected int energy;
 
+    /**
+     * Constructor for an animal, this is called by all subclasses of an animal
+     * @param world provides the world where the animal will live
+     */
     public Animal(World world) {
         this.world = world;
         r = new Random();
         hasGrown = false;
+        timeManager = new TimeManager(this);
     }
 
     @Override
@@ -52,16 +57,41 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         if (world.isNight()) { actNight(); }
     }
 
+    /**
+     * A method we always have to call
+     */
     void actAlways() {
         updateAge();
     }
 
-    abstract void actDay();
-    abstract void actNight();
+    /**
+     * A method that is called during the day
+     */
+    void actDay() {
+        timeManager.updateTime(true);
+        energy--;
+    }
 
+    /**
+     * A method that is called during night
+     */
+    void actNight() {
+        timeManager.updateTime(false);
+    }
+
+    /**
+     * A method for an animal to move around randomly
+     */
     void moveRandomly() {
-        Set<Location> set = world.getEmptySurroundingTiles();
-        List<Location> list = new ArrayList<>(set);
+        if (energy < 10 && r.nextInt(5) == 0) {
+            return;
+        }
+
+        else if (energy > 19 && energy < 40 && r.nextInt(20) == 0) {
+            return;
+        }
+
+        List<Location> list = new ArrayList<>(world.getEmptySurroundingTiles());
         if (!list.isEmpty()) {
             Location loc = list.get(r.nextInt(list.size()));
 
@@ -69,6 +99,9 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         }
     }
 
+    /**
+     * A method for an animal to approach its target. This is done by comparing x and y values, finding an optimal move and the executing the action once were at our target or next to it.
+     */
     void goTowardsTarget() {
         Location start = world.getLocation(this);
         int moveX = start.getX();
@@ -90,7 +123,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
         Location move = new Location(moveX, moveY);
 
-        if (world.getTile(move) instanceof Rabbit && this instanceof Wolf) {
+        if (world.getTile(move) instanceof Rabbit || world.getTile(move) instanceof Carcass && this instanceof Wolf) {
             performAction();
             target = null;
             return;
@@ -122,18 +155,27 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     public abstract void findHome();
     abstract void buildHome();
 
+    /**
+     * A methodd for our animals such that they can enter a home
+     */
     protected void enterHome() {
         isOnMap = false;
         home.addAnimal(this);
         world.remove(this);
     }
 
-    //Exit the rabbit home
+    /**
+     * A method for our animals so that they can leave their home
+     */
     protected void leaveHome() {
-        if (home.isFirst(this) && world.isTileEmpty(world.getLocation(home))) {
+        if (home.isFirst(this) && world.isTileEmpty(world.getLocation(home)) && !(isOnMap)) {
             home.removeAnimal(this);
             Location l = world.getLocation(home);
-            world.setTile(l, this);
+            try {
+                world.setTile(l, this);
+            } catch (IllegalArgumentException e) {
+                //sometimes the code tries to put the same animal on the map multiple times, and i don't know what causes it
+            }
             isOnMap = true;
         }
     }
@@ -144,34 +186,46 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         target = location;
     }
 
+    /**
+     * A method that updates our animals age and makes them "grow" if they have lived long enough
+     */
     public void updateAge() {
         stepsLived++;
         if (stepsLived % 20 == 0) { age++; }
         if (age % 3 == 0 && age != 0) { grow(); }
     }
 
+    /**
+     * A method that grows an animal
+     */
     public void grow(){
         hasGrown = true;
+        energy -=5;
     }
 
+    /**
+     * A method that handles the death of an animal, this includes placing carcasses on the map
+     */
     public void die () {
         isOnMap = false;
         Location l = world.getLocation(this);
-        world.delete(this);
         Object object = world.getNonBlocking(l);
+        if (object instanceof Home) {
+            return;
+        }
         if (object != null) {
             world.delete(object);
         }
-        world.setTile(l, new Carcass(world, energy + 1));
+        world.delete(this);
+        world.setTile(l, new Carcass(world, energy, l));
     }
 
+    public void influence() {
+        energy--;
+    }
 
     public int getFoodEaten() {
         return foodEaten;
-    }
-
-    public void setFoodEaten(int value) {
-        foodEaten = value;
     }
 
     public boolean isOnMap() {
@@ -182,7 +236,11 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         return hasGrown;
     }
 
-    protected void setIsOnMap(boolean b) {
-        isOnMap = b;
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setFoodEaten(int i) {
+        foodEaten = i;
     }
 }

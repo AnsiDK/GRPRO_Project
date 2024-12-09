@@ -13,6 +13,10 @@ public abstract class Home implements NonBlocking {
     protected ArrayList<Animal> animals;
     protected World world;
 
+    /**
+     * Constructor for the home class
+     * @param world provides information regarding the world where the home is located
+     */
     public Home(World world) {
         super();
         animals = new ArrayList<>();
@@ -21,12 +25,10 @@ public abstract class Home implements NonBlocking {
         Main.setNonBlockingObjects(Main.getNonBlockingObjects()+1);
     }
 
-    //Getter for the location of the home
     public Location getLocation() {
         return location;
     }
 
-    //Adds animal to the home
     public void addAnimal(Animal animal) {
         animals.add(animal);
     }
@@ -35,12 +37,22 @@ public abstract class Home implements NonBlocking {
         animals.remove(animal);
     }
 
-    //Checker to see if an animal is first
+    /**
+     * Method that checks whether an animal is first in line to exit their home
+     * @param animal provides the animal in question
+     * @return a boolean that depends on whether the animal is first in line or not
+     */
     public boolean isFirst(Animal animal) {
+        if (animals.size() == 0) {
+            return true;
+        }
         return animals.getFirst() == animal;
     }
 
-    //Checker to see if more than 2 grown animals share the same hole
+    /**
+     * Method that ensures a home contains at least 2 grown animals
+     * @return a boolean that depends on if there are 2 or more grown animals in a given home
+     */
     public boolean hasGrownAnimals() {
         int grownCount = 0;
 

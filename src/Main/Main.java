@@ -7,6 +7,7 @@ import ourActors.Bear;
 import ourActors.Rabbit;
 import ourActors.WolfPack;
 import ourNonBlocking.BerryBush;
+import ourNonBlocking.Carcass;
 import ourNonBlocking.Grass;
 import ourNonBlocking.RabbitHole;
 import itumulator.world.World;
@@ -33,7 +34,7 @@ public class Main {
                 //size = Integer.parseInt(name);
 
                 //TestSize
-                size = 10;
+                size = 20;
                 break;
             }
         }
@@ -55,7 +56,7 @@ public class Main {
         */
 
         //Testing * * * * *
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 10; i++) {
             Location l = rLoc.getRandomLocation();
             w.setTile(l, new Rabbit(w));
             l = rLoc.getRandomLocation();
@@ -65,12 +66,16 @@ public class Main {
         }
 
         Location l = rLoc.getRandomLocation();
-        //new WolfPack(w, 3, l);
+        new WolfPack(w, 3, l);
 
         l = rLoc.getRandomLocation();
-        //w.setTile(l, new Bear(w, l));
+        new WolfPack(w, 3, l);
 
+        l = rLoc.getRandomLocation();
+        w.setTile(l, new Bear(w, l));
 
+        l = rLoc.getRandomLocation();
+        w.setTile(l, new Carcass(w, 50, l));
 
         //Testing * * * * *
 

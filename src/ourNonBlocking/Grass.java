@@ -5,14 +5,24 @@ import Main.Main;
 
 import java.util.*;
 
-
 public class Grass extends Foliage {
+
+    /**
+     * Constructor for our grass
+     * @param world provides information regarding the world where the grass is
+     */
     public Grass (World world) {
         super(world);
+        lifeTime = 40;
     }
 
+    /**
+     * An overridden method that determines how grass should spread
+     * @param location provides the location from which the grass spreads from
+     */
+    @Override
     protected void spread(Location location) {
-        if (r.nextInt(2) == 0 && Main.getNonBlockingObjects() != (Main.getSize() * Main.getSize())) {
+        if (r.nextInt(3) < 1 && Main.getNonBlockingObjects() != (Main.getSize() * Main.getSize())) {
 
             Set<Location> set = world.getSurroundingTiles();
             List<Location> list = new ArrayList<>(set);

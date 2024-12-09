@@ -1,6 +1,7 @@
 package ourActors;
 
 import Main.Main;
+import ourNonBlocking.Carcass;
 import ourNonBlocking.Grass;
 import ourNonBlocking.Home;
 import ourNonBlocking.RabbitHole;
@@ -12,36 +13,51 @@ import java.util.*;
 
 public class Rabbit extends Animal {
 
+    /**
+     * Rabbits constructor
+     * @param world provides the world where the rabbit will live
+     */
     public Rabbit(World world) {
         super(world);
         initializeRabbit(null, true, world);
     }
 
-    //Overloaded Rabbit function for small rabbits so that they come "attached" to a hole
+    /**
+     * Overloaded constructor for a rabbit born within a rabbit hole
+     * @param hole provides the hole given to the rabbit at birth
+     * @param world provides the world where the rabbit will live
+     */
     public Rabbit(RabbitHole hole, World world) {
         super(world);
         initializeRabbit(hole, false, world);
     }
 
-    //Initializing a rabbit
+    /**
+     * A method such that we don't have to write it under both constructors
+     * @param hole provides the hole given to the rabbit at birth if it was born in a hole
+     * @param isOnMap provides a boolean which determines whether the rabbit is on the map or not
+     * @param world provides the world where the rabbit will live
+     */
     private void initializeRabbit(Home hole, boolean isOnMap, World world) {
         this.home = hole;
         this.isOnMap = isOnMap;
         this.world = world;
         searcher = new Searcher(world);
-        timeManager = new TimeManager(this);
         r = new Random();
     }
 
-    //Called when acting during day
+    /**
+     * Overridden method for rabbits to determine what to do during the day. This includes looking for grass, or just jumping around randomly
+     */
+    @Override
     void actDay() {
-        timeManager.updateTime(true);
+        super.actDay();
 
         if (isOnMap) {
             Location loc = world.getCurrentLocation();
 
             //Finding grass is 1st priority
-            if (foodEaten == 0 && searcher.isInVicinity(loc, Grass.class, 3) && target == null) {
+            if (energy < 30 && searcher.isInVicinity(loc, Grass.class, 3) && target == null) {
                 Location l = searcher.searchForObject(Grass.class, loc, 3);
                 setTarget(l);
             }
@@ -56,9 +72,12 @@ public class Rabbit extends Animal {
         if (!isOnMap) { leaveHome(); }
     }
 
-    //Called when acting at night
+    /**
+     * Overridden method for rabbits to determine what to do at night. This mostly includes going towards their home, unless they don't have one, in which case they will search for or make one
+     */
+    @Override
     void actNight() {
-        timeManager.updateTime(false);
+        super.actNight();
 
         if (isOnMap) {
             if (home == null && target == null) { findHome(); }
@@ -71,16 +90,21 @@ public class Rabbit extends Animal {
         }
     }
 
-    //The rabbit eats grass
+    /**
+     * A method for our rabbits to eat grass
+     */
     void eatGrass() {
         Main.setNonBlockingObjects(Main.getNonBlockingObjects() - 1);
         if (world.getNonBlocking(world.getLocation(this)) instanceof Grass) {
             foodEaten ++;
+            energy += 5;
             world.delete(world.getNonBlocking(world.getLocation(this)));
         }
     }
 
-    //The bunny moves to a random location in its vicinity
+    /**
+     * An overridden method for rabbits that make it so that there is a chance they will eat grass after moving randomly, this chance falls for every piece of grass eaten
+     */
     @Override
     void moveRandomly() {
         super.moveRandomly();
@@ -89,7 +113,9 @@ public class Rabbit extends Animal {
         }
     }
 
-    //Rabbit tries to find premade hole
+    /**
+     * A method for our rabbits to find a nearby hole, unless there is none, in which case they will dig a new one. Due to how act is called, the "first" rabbit can dig a hole which the "second" can then find during the same step.
+     */
     public void findHome() {
         if (this.home == null) {
             Location l = world.getLocation(this);
@@ -111,11 +137,13 @@ public class Rabbit extends Animal {
         }
     }
 
-    //A rabbit digs a hole
+    /**
+     * A method for our rabbits that digs a hole and makes sure to delete whatever is in the way
+     */
     public void buildHome () {
         Location l = world.getLocation(this);
 
-        if (searcher.foliageAt(l)) {
+        if (searcher.foliageAt(l) || world.getNonBlocking(l) instanceof Carcass) {
             world.delete(world.getNonBlocking(l));
         }
 
@@ -124,7 +152,9 @@ public class Rabbit extends Animal {
         this.home = rabbitHole;
     }
 
-    //When a rabbit has had enough food, has grown or above and shares a hole with another rabbit, it reproduces
+    /**
+     * A method for our rabbits to reproduce
+     */
     public void reproduce() {
         if (home.hasGrownAnimals() && home != null) {
             Rabbit babyRabbit = new Rabbit((RabbitHole) this.home, world);
@@ -133,7 +163,10 @@ public class Rabbit extends Animal {
         }
     }
 
-    //Rabbit performs action when it reaches target
+    /**
+     * An overridden method for our rabbits to determine what to do when they reach their target
+     */
+    @Override
     void performAction() {
         Object o = world.getNonBlocking(target);
 
