@@ -17,10 +17,10 @@ public class RandomLocationHelper extends Searcher{
         this.world = world;
     }
 
-    public Location getRandomLocation() {
-        Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+    public Location getRandomLocation(int size) {
+        Location l = new Location(r.nextInt(size), r.nextInt(size));
         while (world.getTile(l) != null) {
-            l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+            l = new Location(r.nextInt(size), r.nextInt(size));
         }
         return l;
     }
@@ -33,10 +33,10 @@ public class RandomLocationHelper extends Searcher{
         return l;
     }
 
-    public Location getNonBlockingLocation() {
-        Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+    public Location getNonBlockingLocation(int size) {
+        Location l = new Location(r.nextInt(size), r.nextInt(size));
         while (world.getNonBlocking(l) != null) {
-            l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+            l = new Location(r.nextInt(size), r.nextInt(size));
         }
         return l;
     }

@@ -5,6 +5,7 @@ import itumulator.world.Location;
 import methodHelpers.DisplayProvider;
 import ourActors.Bear;
 import ourActors.Rabbit;
+import ourActors.Wolf;
 import ourActors.WolfPack;
 import ourNonBlocking.BerryBush;
 import ourNonBlocking.Grass;
@@ -25,15 +26,15 @@ public class Main {
     static DisplayProvider displayChanger;
 
     public static void main(String[] args) {
-        Map<String, String> input = fileImport();
+        Map<String, ArrayList<String>> input = fileImport("week-1/t1-1a.txt"); // Input a file name
 
         // Find size of world
         for (String name : input.keySet()) {
             if (input.get(name) == null) {
-                //size = Integer.parseInt(name);
+                size = Integer.parseInt(name);
 
                 //TestSize
-                size = 10;
+                //size = 10;
                 break;
             }
         }
@@ -47,12 +48,12 @@ public class Main {
         //Initialize displayChnager
         displayChanger = new DisplayProvider(p);
 
-        /*
-        for (String name : input.keySet()) {
-            spawnStuff(name, input);
-        }
-        */
 
+        for (String name : input.keySet()) {
+            spawnStuff(name, input, w);
+        }
+
+        /*
         //Testing * * * * *
         for (int i = 0; i < 6; i++) {
             Location l = rLoc.getRandomLocation();
@@ -63,14 +64,15 @@ public class Main {
             w.setTile(l, new BerryBush(w));
         }
 
+
+
         Location l = rLoc.getRandomLocation();
         new WolfPack(w, 3, l);
 
         l = rLoc.getRandomLocation();
         w.setTile(l, new Bear(w, l));
 
-
-
+        */
         //Testing * * * * *
 
         p.show();
@@ -81,46 +83,46 @@ public class Main {
     }
 
     //Imports a random file from week-1 folder
-    public static Map<String, String> fileImport() {
+    public static Map<String, ArrayList<String>> fileImport(String fileName) {
 
-        String folderPath = "week-1";
+        File file = new File(fileName);
 
-        File folder = new File(folderPath);
+        try {
+            Scanner sc = new Scanner(file);
+            Map<String, ArrayList<String>> map = new HashMap<>();
 
-        if (folder.isDirectory()) {
-            File[] txtFiles = folder.listFiles((dir, name) -> name.endsWith(".txt"));
-
-            if (txtFiles != null && txtFiles.length > 0) {
-                int randomIndex = r.nextInt(txtFiles.length);
-                File randomFile = txtFiles[randomIndex];
-
-                try {
-                    Scanner sc = new Scanner(randomFile);
-                    Map<String, String> map = new HashMap<>();
-
-                    while (sc.hasNextLine()) {
-                        List<String> temp = Arrays.asList(sc.nextLine().split(" "));
-                        if (temp.size() < 2) {
-                            map.put(temp.getFirst(), null);
-                        } else {
-                            map.put(temp.get(0), temp.get(1));
-                        }
-                    }
-                    System.out.println(randomFile.getName() + " " + map);
-                    return map;
-                } catch (FileNotFoundException e) {
-                    System.out.println("File not found: " + randomFile);
-                    return null;
+            while (sc.hasNextLine()) {
+                List<String> temp = Arrays.asList(sc.nextLine().split(" "));
+                if (temp.size() < 2) {
+                    map.put(temp.getFirst(), null);
+                } else if (temp.size() == 2) {
+                    map.put(temp.getFirst(), new ArrayList<>());
+                    map.get(temp.getFirst()).add(temp.get(1));
+                } else {
+                    map.put(temp.getFirst(), new ArrayList<>());
+                    map.get(temp.getFirst()).add(temp.get(1));
+                    map.get(temp.getFirst()).add(temp.get(2));
                 }
             }
+            return map;
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found: " + fileName);
+            return null;
         }
-        return null;
     }
 
-    public static void spawnStuff(String name, Map<String, String> input) {
+    public static void spawnStuff(String name, Map<String, ArrayList<String>> input, World world) {
         try {
             if (input.get(name).contains("-")) {
-                List<String> temp = new ArrayList<>(List.of(input.get(name).split("-")));
+                List<String> temp = new ArrayList<>(List.of(input.get(name).get(1).split("-")));
+                int x = 0;
+                int y = 0;
+
+                if (input.get(name).size() == 3) {
+                    String coordinates = input.get(name).get(2);
+                    x = coordinates.charAt(1) - '0';
+                    y = coordinates.charAt(3) - '0';
+                }
 
                 int lower = Integer.parseInt(temp.getFirst());
                 int upper = Integer.parseInt(temp.getLast());
@@ -129,7 +131,8 @@ public class Main {
                 switch (name) {
                     case "grass" -> {
                         for (int i = 0; i < amount; i++) {
-                            spawnGrass();
+                            System.out.println("Grass planted!");
+                            spawnGrass(world);
                         }
                     }
                     case "rabbit" -> {
@@ -142,7 +145,20 @@ public class Main {
                             spawnHole();
                         }
                     }
-                    default -> {
+                    case "bear" -> {
+                        for (int i = 0; i < amount; i++) {
+                            spawnBear(new Location(x, y));
+                        }
+                    }
+                    case "wolf" -> {
+                        spawnWolf(amount);
+                    }
+                    case "berry" -> {
+                        for (int i = 0; i < amount; i++) {
+                            //spawnBerry();
+                        }
+                    }
+                    case "" -> {
                         //Do nothing
                     }
                 }
@@ -150,22 +166,23 @@ public class Main {
             } else {
                 switch (name) {
                     case "grass" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
-                            spawnGrass();
+                        int j = Integer.parseInt(input.get(name).getFirst());
+                        for (int i = 0; i < j; i++) {
+                            System.out.println(i);
+                            System.out.println(j);
+                            spawnGrass(world);
+                            System.out.println("Planted Grass");
                         }
                     }
                     case "rabbit" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                        for (int i = 0; i < Integer.parseInt(input.get(name).get(1)); i++) {
                             spawnRabbit();
                         }
                     }
                     case "burrow" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name)); i++) {
+                        for (int i = 0; i < Integer.parseInt(input.get(name).get(1)); i++) {
                             spawnHole();
                         }
-                    }
-                    default -> {
-                        //Do nothing
                     }
                 }
             }
@@ -174,9 +191,10 @@ public class Main {
         }
     }
 
+
     // Spawn some Grass
-    public static void spawnGrass() {
-        w.setTile(nonBlockingLocation(), new Grass(w));
+    public static void spawnGrass(World world) {
+        world.setTile(rLoc.getNonBlockingLocation(getSize()), new Grass(world));
     }
 
     // Spawn a rabbit
@@ -190,14 +208,27 @@ public class Main {
         w.setTile(l, new RabbitHole(w));
     }
 
+    public static void spawnWolf(int amount) {
+        Location l = blockingLocation();
+        w.setTile(l, new WolfPack(w, amount, l));
+    }
+
+    public static void spawnBear(Location location) {
+        w.setTile(location, new Bear(w, location));
+    }
+
+    public static void spawnBerryBush() {
+        w.setTile(blockingLocation(), new BerryBush(w));
+    }
+
     // Find a location for a NonBlocking object
     public static Location nonBlockingLocation() {
-        return rLoc.getNonBlockingLocation();
+        return rLoc.getNonBlockingLocation(getSize());
     }
 
     // Find a location for a Blocking object
     public static Location blockingLocation() {
-        return rLoc.getRandomLocation();
+        return rLoc.getRandomLocation(w.getSize());
     }
 
     public static int getNonBlockingObjects() { return nonBlockingObjects; }
