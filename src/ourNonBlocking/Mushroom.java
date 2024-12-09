@@ -16,6 +16,8 @@ public class Mushroom extends Foliage implements DynamicDisplayInformationProvid
     private Location location;
     private boolean magic;
 
+    //I HATE THE MUSHROOM CLASS
+
     /**
      * Constructor for the mushroom class
      * @param world provides information regarding the world the mushroom is in
