@@ -5,7 +5,7 @@ import itumulator.executable.DisplayInformation;
 import itumulator.executable.DynamicDisplayInformationProvider;
 import itumulator.world.Location;
 import itumulator.world.World;
-import methodHelpers.DisplayProvider;
+import methodHelpers.DisplayChanger;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public class BerryBush extends Foliage implements DynamicDisplayInformationProvider {
-    DisplayProvider displayChanger;
+    DisplayChanger displayChanger;
     protected boolean hasBerries = false;
 
     public BerryBush(World world) {

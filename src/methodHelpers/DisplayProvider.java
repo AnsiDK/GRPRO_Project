@@ -2,9 +2,6 @@ package methodHelpers;
 
 import itumulator.executable.DisplayInformation;
 import itumulator.executable.Program;
-import ourActors.Bear;
-import ourActors.Rabbit;
-import ourActors.Wolf;
 import ourNonBlocking.*;
 
 import java.awt.*;
@@ -13,11 +10,18 @@ public class DisplayProvider {
 
     private static Program program;
 
+    /**
+     * A class that provides static display information
+     * @param program provides the program for which we provide the sprites for
+     */
     public DisplayProvider(Program program) {
         this.program = program;
         initializeDisplays();
     }
 
+    /**
+     * Function that gets called once at the very start to initialize the sprites that does not change.
+     */
     public static void initializeDisplays() {
         DisplayInformation grassDi = new DisplayInformation(Color.green, "grass");
         program.setDisplayInformation(Grass.class, grassDi);
@@ -27,23 +31,5 @@ public class DisplayProvider {
 
         DisplayInformation wolfDenDi = new DisplayInformation(Color.orange, "hole");
         program.setDisplayInformation(WolfDen.class, wolfDenDi);
-
-        DisplayInformation bushDi = new DisplayInformation(Color.pink, "bush");
-        program.setDisplayInformation(BerryBush.class, bushDi);
-
-        DisplayInformation mushRoomDi = new DisplayInformation(Color.yellow, "mushroom");
-        program.setDisplayInformation(MushRoom.class, mushRoomDi);
-    }
-
-    public static void changeSprite(Object object, boolean grow) {
-
-    }
-
-    public DisplayInformation changeBerryBushSprite(BerryBush bush) {
-        if (bush.getBerries()) {
-            return new DisplayInformation(Color.red, "bush-berries");
-        } else {
-            return new DisplayInformation(Color.blue, "bush");
-        }
     }
 }

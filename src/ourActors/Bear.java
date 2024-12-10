@@ -46,7 +46,6 @@ public class Bear extends Animal {
             Animal animal = (Animal) world.getTile(target);
             animal.die();
             foodEaten++;
-            energyOfAnimal += 2;
         }
 
         else if (world.getNonBlocking(target) instanceof BerryBush) {
@@ -54,7 +53,6 @@ public class Bear extends Animal {
             if (berryBush.getBerries()) {
                 berryBush.eatBerry();
                 foodEaten++;
-                energyOfAnimal += 2;
             }
         }
     }

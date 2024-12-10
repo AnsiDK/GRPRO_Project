@@ -16,6 +16,12 @@ public class Wolf extends Animal {
     private boolean isPackLeader;
     private WolfPack wolfPack;
 
+    /**
+     * Constructor for our wolves
+     * @param world provides the world where the wolf is
+     * @param wolfPack provides the wolfPack that the wolf is a part of
+     * @param wolfPackID provides the ID of the wolfPack that the wolf is part of
+     */
     public Wolf(World world, WolfPack wolfPack, int wolfPackID) {
         super(world);
         searcher = new Searcher(world);
@@ -25,20 +31,28 @@ public class Wolf extends Animal {
         this.wolfPack = wolfPack;
     }
 
-    //Overloaded constructor for a pack leader
+    /**
+     * An overloaded constructor for a wolf that is a packleader
+     * @param world provides the world where the wolf is
+     * @param wolfPack provides the wolfPack that the wolf is a part of
+     * @param wolfPackID provides the ID of the wolfPack that the wolf is part of
+     * @param isPackLeader provides information regarding if the wolf is a leader or not
+     */
     public Wolf(World world, WolfPack wolfPack, int wolfPackID, boolean isPackLeader) {
         super(world);
         searcher = new Searcher(world);
-        timeManager = new TimeManager(this);
         r = new Random();
         this.wolfPackID = wolfPackID;
         this.wolfPack = wolfPack;
         this.isPackLeader = isPackLeader;
     }
 
+    /**
+     * Overridden method for our wolves to determine what to do during the day, this includes looking for carcasses or rabbits as food, or going closer to the pack leader if they are too far away from it
+     */
     @Override
     public void actDay() {
-        timeManager.updateTime(true);
+        super.actDay();
 
         if (isOnMap) {
             Location l = world.getCurrentLocation();
@@ -51,14 +65,11 @@ public class Wolf extends Animal {
                 setTarget(food);
             }
 
-            //I do not know how this piece of shit code is ever accssesed while the wolf is not on the map...
-            try {
+            if (wolfPack.getPackLeader().isOnMap) {
                 if (!isPackLeader && distFromPackLeader() > 3 && foodEaten != 0) {
                     Location packLeaderLocation = world.getLocation(wolfPack.getPackLeader());
                     setTarget(packLeaderLocation);
                 }
-            } catch (IllegalArgumentException e) {
-                //well...
             }
 
             if (target != null) {
@@ -70,8 +81,12 @@ public class Wolf extends Animal {
         } else { leaveHome(); }
     }
 
+    /**
+     * An overridden method for our wolves to determine what to do at night, much like the rabbits, they too searchers for their home
+     */
+    @Override
     void actNight() {
-        timeManager.updateTime(false);
+        super.actNight();
 
         if (isOnMap) {
             if (target == null) { findHome(); }
@@ -80,23 +95,29 @@ public class Wolf extends Animal {
                 goTowardsTarget();
             } else {
                 moveRandomly();
-                System.out.println("Chose to walk around randomly while home = " + home);
             }
         }
     }
 
+    /**
+     * Overridden method for wolves to determine what to do once they reach their target, this includes eating rabbits or carcasses, or going into their home.
+     */
     @Override
     void performAction() {
-        if (world.getTile(target) instanceof Rabbit) {
-            Rabbit r = (Rabbit) world.getTile(target);
-            eatRabbit(r);
+        Object object = world.getTile(target);
+
+        if (object instanceof Rabbit || object instanceof Carcass) {
+            eat(object);
         }
 
-        if (world.getTile(target) instanceof WolfDen) {
+        if (object instanceof WolfDen) {
             enterHome();
         }
     }
 
+    /**
+     * An overridden method for wolves to find a home
+     */
     @Override
     public void findHome() {
         if (home == null) {
@@ -107,6 +128,9 @@ public class Wolf extends Animal {
         }
     }
 
+    /**
+     * An overridden method for wolves to build a home, when this is done, the home is also assigned to all other wolves in the pact.
+     */
     @Override
     void buildHome() {
         Location l = world.getLocation(this);
@@ -116,7 +140,8 @@ public class Wolf extends Animal {
         }
 
         WolfDen wolfDen = new WolfDen(world);
-        if (world.getNonBlocking(world.getLocation(this)) instanceof Foliage) {
+        Object object = world.getNonBlocking(world.getLocation(this));
+        if (object instanceof Foliage || object instanceof Carcass) {
             world.delete(world.getNonBlocking(world.getLocation(this)));
         }
         world.setTile(l, wolfDen);
@@ -129,29 +154,26 @@ public class Wolf extends Animal {
 
     }
 
-    private void eatRabbit(Rabbit eatenRabbit) {
-        eatenRabbit.setIsOnMap(false);
-        world.delete(eatenRabbit);
-        foodEaten++;
-        energyOfAnimal += 2;
+    /**
+     * A method for wolves to eat different kinds of stuff, and depending on what they eat, certain stuff happens
+     * @param eatenObject provides the object the wolf is about to eat
+     */
+    private void eat(Object eatenObject) {
+        if (eatenObject instanceof Rabbit) {
+            foodEaten++;
+            energy += 20;
+            Rabbit rabbit = (Rabbit) eatenObject;
+            rabbit.die();
+        } else if (eatenObject instanceof Carcass) {
+            foodEaten++;
+            energy += ((Carcass) eatenObject).getEnergy();
+            ((Carcass) eatenObject).dissapear();
+        }
     }
 
+
     private double distFromPackLeader() {
-        Location l = world.getLocation(wolfPack.getPackLeader());
-        Location l2 = world.getCurrentLocation();
-
-        if (l == null) {
-            l = home.getLocation();
-        }
-
-        if (l2 == null) {
-            l2 = home.getLocation();
-        }
-
-        int x = l.getX() - l2.getX();
-        int y = l.getY() - l2.getY();
-
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return searcher.getDistance(world.getLocation(this), world.getLocation(wolfPack.getPackLeader()));
     }
 
     public void setHome(WolfDen home) {

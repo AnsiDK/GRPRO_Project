@@ -26,13 +26,11 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     protected int stepsLived = 0;
     protected Searcher searcher;
     protected TimeManager timeManager;
-    protected int energyOfAnimal;
 
     public Animal(World world) {
         this.world = world;
         r = new Random();
         hasGrown = false;
-        energyOfAnimal = 100;
     }
 
     @Override
@@ -60,18 +58,6 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     abstract void actNight();
 
     void moveRandomly() {
-        // 10% chance of no movement, if the energy is 20 or less
-        if (energyOfAnimal <= 20) {
-            if (r.nextInt(100) >= 10) {
-                return;
-            }
-        // 5% chance of no movement, if the energy is 50 or less
-        } else if (energyOfAnimal >= 21 && energyOfAnimal <= 50) {
-            if (r.nextInt(100) >= 5) {
-                return;
-            }
-        }
-
         Set<Location> set = world.getEmptySurroundingTiles();
         List<Location> list = new ArrayList<>(set);
         if (!list.isEmpty()) {
@@ -160,29 +146,16 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         stepsLived++;
         if (stepsLived % 20 == 0) { age++; }
         if (age % 3 == 0 && age != 0) { grow(); }
-        energyOfAnimal -= 7;
-        energyCheck();
-    }
-
-    // If the energy of the animal is less than 1, then the animal will die.
-    public void energyCheck() {
-        if (energyOfAnimal < 1) {
-            die();
-        }
     }
 
     public void grow(){
         hasGrown = true;
     }
 
-    public void die() {
+    public void die () {
         isOnMap = false;
-        Location currentLocation = world.getLocation(this);
-
-        if (currentLocation != null) { // Ensure location is valid
-            world.setTile(currentLocation, new Carcass(world, energyOfAnimal + 1)); // Place carcass first
-            world.delete(this); // Then remove the animal
-        }
+        world.delete(this);
+        world.setTile(world.getLocation(this, new Carcass(world, energy + 1)));
     }
 
     public int getFoodEaten() {
