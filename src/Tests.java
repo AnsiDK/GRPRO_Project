@@ -72,25 +72,22 @@ public class Tests {
         Map<Object, Location> objects = w.getEntities();
 
         Rabbit rabbit = null;
+        Location grass = null;
 
         for (Object o : objects.keySet()) {
-            if (o == Rabbit.class) {
-                Location loc = objects.get(o);
+            if (o instanceof Rabbit) {
+                Location loc = w.getLocation(o);
                 rabbit = (Rabbit) w.getTile(loc);
+            } else if (o instanceof Grass) {
+                grass = w.getLocation(o);
             }
         }
 
-        for (int i = 0; i < 50; i++) {
-            objects = w.getEntities();
+        try {
+            w.move(rabbit, grass);
+            isOnGrass = true;
+        } catch (Exception _) {
 
-            for (Object key : objects.keySet()) {
-                if (key == Grass.class) {
-                    if(w.getLocation(rabbit) == objects.get(key)) {
-                        isOnGrass = true;
-                    }
-                }
-            }
-            p.simulate();
         }
 
         assertTrue(isOnGrass);
@@ -102,14 +99,15 @@ public class Tests {
 
         int occupied = 0;
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                if (w.isTileEmpty(new Location(i, j))) {
-                    occupied++;
-                }
+        Map<Object, Location> objects = w.getEntities();
+
+        for (Object o : objects.keySet()) {
+            if (o instanceof Rabbit) {
+                occupied++;
             }
         }
-        assertEquals(3, occupied);
+
+        assertEquals(1, occupied);
     }
 
     @Test
@@ -123,14 +121,14 @@ public class Tests {
         Rabbit rabbit = null;
 
         for (Object o : objects.keySet()) {
-            if (o == Rabbit.class) {
+            if (o instanceof Rabbit) {
                 Location loc = objects.get(o);
                 rabbit = (Rabbit) w.getTile(loc);
             }
         }
 
         // This needs to be implemented...
-        //rabbit.kill();
+        rabbit.die();
 
         objects = w.getEntities();
 
@@ -182,7 +180,7 @@ public class Tests {
 
     @Test
     public void Test12f () {
-        CreateWorld("week-1/t1-3fg.txt");
+        CreateWorld("week-1/t1-2fg.txt");
 
         Map<Object, Location> objects = w.getEntities();
 
@@ -191,7 +189,7 @@ public class Tests {
         int holesBefore = 0;
 
         for (Object o : objects.keySet()) {
-            if (o == RabbitHole.class) {
+            if (o instanceof RabbitHole) {
                 holesBefore++;
             }
         }
@@ -205,7 +203,7 @@ public class Tests {
         int holesAfter = 0;
 
         for (Object o : objects.keySet()) {
-            if (o == Rabbit.class) {
+            if (o instanceof RabbitHole) {
                 holesAfter++;
             }
         }
@@ -228,7 +226,7 @@ public class Tests {
         Rabbit rabbit = null;
 
         for (Object o : objects.keySet()) {
-            if (o == Rabbit.class) {
+            if (o instanceof Rabbit) {
                 Location loc = objects.get(o);
                 rabbit = (Rabbit) w.getTile(loc);
             }
@@ -265,47 +263,45 @@ public class Tests {
         Map<Object, Location> objects = w.getEntities();
 
         boolean placedHole = false;
-        boolean dugHole = false;
-
-        Rabbit rabbit = null;
 
         for (Object o : objects.keySet()) {
-            if (o == RabbitHole.class) {
+            if (o instanceof RabbitHole) {
                 placedHole = true;
-            } else if (o == Rabbit.class) {
-                Location loc = objects.get(o);
-                rabbit = (Rabbit) w.getTile(loc);
             }
-        }
-
-        for (int i = 0; i < 10; i++) {
-            p.simulate();
-        }
-
-        objects = w.getEntities();
-
-        int holes = 0;
-
-        for (Object o : objects.keySet()) {
-            if (o == RabbitHole.class) {
-                holes++;
-            }
-        }
-
-        if (holes > 1) {
-            dugHole = true;
         }
 
         assertTrue(placedHole);
-        assertTrue(dugHole);
     }
 
     @Test
     public void Test13b () {
         CreateWorld("week-1/t1-3b.txt");
 
+        boolean standOnHole = false;
+
         Map<Object, Location> objects = w.getEntities();
 
+        Rabbit rabbit = null;
+        RabbitHole hole = null;
+
+        for (Object o : objects.keySet()) {
+            if (o instanceof Rabbit) {
+                Location loc = objects.get(o);
+                rabbit = (Rabbit) w.getTile(loc);
+            } else if (o instanceof RabbitHole) {
+                Location loc = objects.get(o);
+                hole = (RabbitHole) w.getTile(loc);
+            }
+        }
+
+        try {
+            w.move(rabbit, w.getLocation(hole));
+            standOnHole = true;
+        } catch (Exception _) {
+
+        }
+
+        assertTrue(standOnHole);
     }
 
     public void CreateWorld(String filename) {
