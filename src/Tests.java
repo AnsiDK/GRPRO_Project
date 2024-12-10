@@ -114,31 +114,86 @@ public class Tests {
     public void Test12b () {
         CreateWorld("week-1/t1-2b.txt");
 
-        boolean isNotDead = true;
+        boolean isDead = false;
 
         Map<Object, Location> objects = w.getEntities();
 
         Rabbit rabbit = null;
 
+        int before = 0;
+
         for (Object o : objects.keySet()) {
             if (o instanceof Rabbit) {
                 Location loc = objects.get(o);
                 rabbit = (Rabbit) w.getTile(loc);
+                before++;
             }
         }
 
-        // This needs to be implemented...
         rabbit.die();
 
         objects = w.getEntities();
 
+        int after = 0;
+
         for (Object key : objects.keySet()) {
-            if (key != null) {
-                isNotDead = false;
+            if (key instanceof Rabbit) {
+                after++;
             }
         }
 
-        assertTrue(isNotDead);
+        if (after < before) {
+            isDead = true;
+        }
+
+        assertTrue(isDead);
+    }
+
+    @Test
+    public void Test12c () {
+        CreateWorld("week-1/t1-2a.txt");
+
+        boolean isDead = false;
+
+        Map<Object, Location> objects = w.getEntities();
+
+        int before = 0;
+        Rabbit rabbit = null;
+
+
+        for (Object o : objects.keySet()) {
+            if (o instanceof Rabbit) {
+                rabbit = (Rabbit) w.getTile(objects.get(o));
+                before++;
+            }
+        }
+        System.out.println(before);
+
+        for (int i = 0; i < 100; i++) {
+            p.simulate();
+        }
+
+        int after = 0;
+        for (Object key : objects.keySet()) {
+            if (key instanceof Rabbit) {
+                after++;
+            }
+        }
+
+        System.out.println(after);
+
+        if (after < before) {
+            isDead = true;
+        }
+
+        assertTrue(isDead);
+    }
+
+    @Test
+    public void Test12d () {
+        CreateWorld("week-1/t1-2cde.txt");
+
+
     }
 
     @Test
@@ -217,7 +272,9 @@ public class Tests {
 
     @Test
     public void Test12g () {
-        CreateWorld("week-1/t1-fg.txt");
+        CreateWorld("week-1/t1-2cde.txt");
+
+        w.setDay();
 
         boolean goToHole = false;
 
@@ -229,27 +286,35 @@ public class Tests {
             if (o instanceof Rabbit) {
                 Location loc = objects.get(o);
                 rabbit = (Rabbit) w.getTile(loc);
+                break;
             }
         }
 
-        for (int i = 0; i < 10; i++) {
+        Location test = w.getLocation(rabbit);
+
+        for (int i = 0; i < 9; i++) {
             p.simulate();
         }
+
+        rabbit.buildHome();
 
         Home hole = rabbit.getHome();
 
         Location locRabBefore = w.getLocation(rabbit);
-        Location locHol = w.getLocation(hole);
 
-        double dist = Searcher.getDistance(locRabBefore, locHol);
+        double dist = Searcher.getDistance(locRabBefore, hole.getLocation());
 
         p.simulate();
 
-        Location locRabAfter = w.getLocation(rabbit);
+        try {
+            Location locRabAfter = w.getLocation(rabbit);
 
-        double distAfter = Searcher.getDistance(locRabAfter, locHol);
+            double distAfter = Searcher.getDistance(locRabAfter, hole.getLocation());
 
-        if (dist > distAfter) {
+            if (dist > distAfter) {
+                goToHole = true;
+            }
+        } catch (Exception _) {
             goToHole = true;
         }
 

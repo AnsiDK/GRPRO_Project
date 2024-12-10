@@ -183,6 +183,4 @@ public class Rabbit extends Animal {
             setTarget(null);
         }
     }
-
-
 }
