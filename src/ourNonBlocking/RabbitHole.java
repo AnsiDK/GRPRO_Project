@@ -39,7 +39,7 @@ public class RabbitHole extends Home {
      * A method that handles the case where there are 7 or more rabbits in a hole in whic case it will take all index positions from 5 and above and make a new hole on the map for them.
      */
     public void splitRabbits() {
-        Location newHoleLocation = rLoc.getNonBlockingLocation();
+        Location newHoleLocation = rLoc.getNonBlockingLocation(world.getSize());
         Object object = world.getNonBlocking(newHoleLocation);
 
         if (object instanceof Foliage || object instanceof Carcass) {

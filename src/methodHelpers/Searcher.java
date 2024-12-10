@@ -92,7 +92,7 @@ public class Searcher {
      * @param b
      * @return a double that depends on the distance between the two locations
      */
-    public double getDistance(Location a, Location b) {
+    public static double getDistance(Location a, Location b) {
         return Math.sqrt(Math.pow(b.getX() - a.getX(), 2) + Math.pow(b.getY() - a.getY(), 2));
     }
 }

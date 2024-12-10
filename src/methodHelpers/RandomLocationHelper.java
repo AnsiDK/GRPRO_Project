@@ -19,12 +19,13 @@ public class RandomLocationHelper extends Searcher{
 
     /**
      * A function that gives a random location in the world where there is nothing
+     * @param size Provides size of the world
      * @return an empty location on the map
      */
-    public Location getRandomLocation() {
-        Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+    public Location getRandomLocation(int size) {
+        Location l = new Location(r.nextInt(size), r.nextInt(size));
         while (world.getTile(l) != null) {
-            l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+            l = new Location(r.nextInt(size), r.nextInt(size));
         }
         return l;
     }
@@ -33,10 +34,10 @@ public class RandomLocationHelper extends Searcher{
      * A function the gives us a random location in the world that does not contain a nonBlocking object.
      * @return a location on the map that is not occupied by a nonBlocking object
      */
-    public Location getNonBlockingLocation() {
-        Location l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+    public Location getNonBlockingLocation(int size) {
+        Location l = new Location(r.nextInt(size), r.nextInt(size));
         while (world.getNonBlocking(l) != null) {
-            l = new Location(r.nextInt(Main.getSize()), r.nextInt(Main.getSize()));
+            l = new Location(r.nextInt(size), r.nextInt(size));
         }
         return l;
     }

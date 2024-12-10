@@ -14,14 +14,24 @@ public class Bear extends Animal {
     Location territoryCenter;
     Searcher searcher;
 
+    /**
+     * Constructor for a bear
+     * @param world provides the world where the bear will live
+     * @param territoryCenter provides the location of the bears territory center, which it will stay near
+     */
     public Bear(World world, Location territoryCenter) {
         super(world);
         this.territoryCenter = territoryCenter;
         searcher = new Searcher(world);
     }
 
+    /**
+     * Overridden method for bears to determine what to do during the day, this includes searching for food, or going closer to the territory center whenever it goes beyond a certain threshold
+     */
     @Override
     void actDay() {
+        super.actDay();
+
         serchForFood();
 
         if (searcher.getDistance(world.getCurrentLocation(), territoryCenter) > 4 && foodEaten != 0) {
@@ -35,17 +45,32 @@ public class Bear extends Animal {
         }
     }
 
+    /**
+     * Overridden method for bears to determine what to do at night, in our case they are just sleeping/doing nothing
+     */
     @Override
     void actNight() {
+        super.actNight();
         //Sleep
     }
 
+    /**
+     * An overridden method from the animal class that handles the actions performed by bears when they reach their target
+     */
     @Override
     void performAction() {
         if (world.getTile(target) instanceof Animal && !(world.getTile(target) instanceof Bear)) {
             Animal animal = (Animal) world.getTile(target);
             animal.die();
             foodEaten++;
+            energy += 20;
+        }
+
+        else if (world.getTile(target) instanceof Carcass) {
+            Carcass carcass = (Carcass) world.getTile(target);
+            foodEaten++;
+            energy += carcass.getEnergy();
+            carcass.dissapear();
         }
 
         else if (world.getNonBlocking(target) instanceof BerryBush) {
@@ -53,9 +78,11 @@ public class Bear extends Animal {
             if (berryBush.getBerries()) {
                 berryBush.eatBerry();
                 foodEaten++;
+                energy += 5;
             }
         }
     }
+
 
     @Override
     public void findHome() {
@@ -72,7 +99,15 @@ public class Bear extends Animal {
         //Don't think the bear can reproduce
     }
 
+    /**
+     * Method for bears to search for food, this is done by using the "searcher" and looking for objects of certain classes within the bears territory
+     */
     void serchForFood() {
+        if (searcher.isInVicinity(territoryCenter, Carcass.class, 3)) {
+            Location l = Searcher.searchForObject(Carcass.class, territoryCenter, 3);
+            setTarget(l);
+        }
+
         if (searcher.isInVicinity(territoryCenter, Wolf.class, 3)) {
             Location l = Searcher.searchForObject(Wolf.class, territoryCenter, 3);
             setTarget(l);

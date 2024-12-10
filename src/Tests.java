@@ -236,7 +236,7 @@ public class Tests {
             p.simulate();
         }
 
-        RabbitHole hole = rabbit.getHome();
+        Home hole = rabbit.getHome();
 
         Location locRabBefore = w.getLocation(rabbit);
         Location locHol = w.getLocation(hole);
