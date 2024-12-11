@@ -62,6 +62,9 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
      */
     void actAlways() {
         updateAge();
+        if (energy < 0) {
+            die();
+        }
     }
 
     /**
@@ -174,7 +177,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
             try {
                 world.setTile(l, this);
             } catch (IllegalArgumentException e) {
-                //sometimes the code tries to put the same animal on the map multiple times, and i don't know what causes it
+                //sometimes the code tries to put the same animal on the map multiple times, and I don't know what causes it
             }
             isOnMap = true;
         }
