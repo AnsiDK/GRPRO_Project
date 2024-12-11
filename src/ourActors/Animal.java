@@ -8,6 +8,7 @@ import itumulator.world.World;
 import methodHelpers.Searcher;
 import methodHelpers.TimeManager;
 import ourNonBlocking.Carcass;
+import ourNonBlocking.Foliage;
 import ourNonBlocking.Home;
 
 import java.awt.*;
@@ -37,7 +38,6 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         r = new Random();
         hasGrown = false;
         timeManager = new TimeManager(this);
-        energy = 25;
     }
 
     @Override
@@ -62,7 +62,6 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
      */
     void actAlways() {
         updateAge();
-        energy--;
     }
 
     /**
@@ -70,6 +69,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
      */
     void actDay() {
         timeManager.updateTime(true);
+        energy--;
     }
 
     /**
@@ -246,9 +246,5 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
     public Home getHome() {
         return home;
-    }
-
-    public void setEnergy(int energy) {
-        this.energy = energy;
     }
 }
