@@ -41,16 +41,6 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
     }
 
     @Override
-    public DisplayInformation getInformation() {
-        String name = (this.getClass().getSimpleName()).toLowerCase();
-        if (hasGrown) {
-            return new DisplayInformation(Color.red, name);
-        } else {
-            return new DisplayInformation(Color.black, name + "-small");
-        }
-    }
-
-    @Override
     public void act(World world) {
         actAlways();
         if (world.isDay()) { actDay(); }
