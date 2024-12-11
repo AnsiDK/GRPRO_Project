@@ -62,6 +62,9 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
      */
     void actAlways() {
         updateAge();
+        if (energy < 0) {
+            die();
+        }
     }
 
     /**
@@ -246,5 +249,9 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
 
     public Home getHome() {
         return home;
+    }
+
+    public void setEnergy(int i) {
+        energy = i;
     }
 }
