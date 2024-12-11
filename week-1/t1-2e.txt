@@ -1,0 +1,3 @@
+10
+rabbit 1
+grass 40

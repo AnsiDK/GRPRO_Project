@@ -1,5 +1,8 @@
 import itumulator.executable.Program;
+import ourActors.Bear;
 import ourActors.Rabbit;
+import ourActors.Wolf;
+import ourActors.WolfPack;
 import ourNonBlocking.*;
 import itumulator.world.World;
 import itumulator.world.Location;
@@ -150,83 +153,103 @@ public class Tests {
     }
 
     @Test
-    public void Test12c () {
+    public void Test12d () {
         CreateWorld("week-1/t1-2a.txt");
 
-        boolean isDead = false;
+        boolean isSlow = false;
 
-        Map<Object, Location> objects = w.getEntities();
+        List<Integer> moved = new ArrayList<>();
 
-        int before = 0;
+        for (int i = 0; i < 100; i++) {
+            w.setDay();
+            Rabbit rabbit = new Rabbit(w);
+            Location before = blockingLocation(w);
+            w.setTile(before, rabbit);
+            rabbit.setEnergy(100);
+
+            p.simulate();
+
+            Location after = w.getLocation(rabbit);
+
+            if (before != after) {
+                moved.add(1);
+            } else {
+                moved.add(0);
+            }
+
+            w.delete(rabbit);
+        }
+
+        List<Integer> movedLow = new ArrayList<>();
+
+        for (int i = 0; i < 100; i++) {
+            w.setDay();
+            Rabbit rabbit = new Rabbit(w);
+            Location before = blockingLocation(w);
+            w.setTile(before, rabbit);
+            rabbit.setEnergy(2);
+
+            p.simulate();
+
+            Location after = w.getLocation(rabbit);
+
+            if (before != after) {
+                movedLow.add(1);
+            } else {
+                movedLow.add(0);
+            }
+
+            w.delete(rabbit);
+        }
+
+        if (avg(movedLow) < avg(moved)) {
+            isSlow = true;
+        }
+
+        assertTrue(isSlow);
+    }
+
+    @Test
+    public void Test2e() {
+        CreateWorld("week-1/t1-2e.txt");
+        boolean reproduced = false;
+
         Rabbit rabbit = null;
 
+        Map<Object, Location> objects = w.getEntities();
 
         for (Object o : objects.keySet()) {
             if (o instanceof Rabbit) {
-                rabbit = (Rabbit) w.getTile(objects.get(o));
-                before++;
-            }
-        }
-        System.out.println(before);
-
-        for (int i = 0; i < 100; i++) {
-            p.simulate();
-        }
-
-        int after = 0;
-        for (Object key : objects.keySet()) {
-            if (key instanceof Rabbit) {
-                after++;
+                rabbit = (Rabbit) o;
             }
         }
 
-        System.out.println(after);
+        rabbit.buildHome();
+        Home home = rabbit.getHome();
+        Rabbit rabbit2 = new Rabbit(w);
+        home.addAnimal(rabbit2);
+        w.setTile(blockingLocation(w), rabbit2);
+        rabbit.setEnergy(200);
+        rabbit2.setEnergy(200);
+        rabbit.grow();
+        rabbit2.grow();
 
-        if (after < before) {
-            isDead = true;
-        }
-
-        assertTrue(isDead);
-    }
-
-    @Test
-    public void Test12d () {
-        CreateWorld("week-1/t1-2cde.txt");
-
-
-    }
-
-    @Test
-    public void Test12cde () {
-        CreateWorld("week-1/t1-2cde.txt");
-
-        boolean reproduced = false;
-
-        Map<Object, Location> objects = w.getEntities();
-
-        int rabbits = 0;
-
-        for (Object o : objects.keySet()) {
-            if (o == Rabbit.class) {
-                rabbits++;
-            }
-        }
-
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 40; i++) {
             p.simulate();
         }
 
         objects = w.getEntities();
-
         int rabbitsAfter = 0;
 
         for (Object o : objects.keySet()) {
-            if (o == Rabbit.class) {
+            if (o instanceof Rabbit) {
                 rabbitsAfter++;
             }
         }
 
-        if (rabbitsAfter > rabbits) {
+        System.out.println(rabbitsAfter);
+
+        if (2 < rabbitsAfter) {
             reproduced = true;
         }
 
@@ -369,6 +392,83 @@ public class Tests {
         assertTrue(standOnHole);
     }
 
+    @Test
+    public void Test21a () {
+        CreateWorld("week-2/t2-1ab.txt");
+
+        int occupied = 0;
+
+        Map<Object, Location> objects = w.getEntities();
+
+        for (Object o : objects.keySet()) {
+            System.out.println(o);
+            if (o instanceof Wolf) {
+                occupied++;
+            }
+        }
+
+        assertEquals(1, occupied);
+    }
+
+    @Test
+    public void Test21b () {
+        CreateWorld("week-2/t2-1ab.txt");
+
+        boolean isDead = false;
+
+        Map<Object, Location> objects = w.getEntities();
+
+        Wolf wolf = null;
+
+        int before = 0;
+
+        for (Object o : objects.keySet()) {
+            if (o instanceof Wolf) {
+                Location loc = objects.get(o);
+                wolf = (Wolf) w.getTile(loc);
+                before++;
+            }
+        }
+
+        wolf.die();
+
+        objects = w.getEntities();
+
+        int after = 0;
+
+        for (Object key : objects.keySet()) {
+            if (key instanceof Wolf) {
+                after++;
+            }
+        }
+
+        if (after < before) {
+            isDead = true;
+        }
+
+        assertTrue(isDead);
+    }
+
+    @Test
+    public void Test21c () {
+        CreateWorld("week-2/t2-1c.txt");
+
+        Map<Object, Location> objects = w.getEntities();
+
+        Wolf wolf = null;
+        Rabbit rabbit = null;
+
+        for (Object o : objects.keySet()) {
+            if (o instanceof Wolf) {
+                wolf = (Wolf) o;
+            } else if (o instanceof Rabbit) {
+                rabbit = (Rabbit) o;
+            }
+        }
+
+
+    }
+
     public void CreateWorld(String filename) {
         Map<String, ArrayList<String>> input = fileImport(filename);
 
@@ -391,6 +491,8 @@ public class Tests {
             spawnStuff(name, input, w);
         }
     }
+
+
 
     public static Map<String, ArrayList<String>> fileImport(String fileName) {
 
@@ -424,10 +526,14 @@ public class Tests {
         try {
             if (input.get(name).getFirst().contains("-")) {
                 List<String> temp = new ArrayList<>(List.of(input.get(name).getFirst().split("-")));
-                String coordinates = null;
+
+                int x = 0;
+                int y = 0;
 
                 if (input.get(name).size() == 3) {
-                    coordinates = input.get(name).get(2);
+                    String coordinates = input.get(name).get(2);
+                    x = coordinates.charAt(1) - '0';
+                    y = coordinates.charAt(3) - '0';
                 }
 
                 int lower = Integer.parseInt(temp.getFirst());
@@ -452,17 +558,16 @@ public class Tests {
                     }
                     case "bear" -> {
                         for (int i = 0; i < amount; i++) {
-                            //spawnBear(coordinates);
+                            spawnBear(w, new Location(x, y));
                         }
                     }
                     case "wolf" -> {
-                        for (int i = 0; i < amount; i++) {
-                            //spawnWolf();
-                        }
+                        System.out.println("wolf");
+                        spawnWolf(w, amount);
                     }
                     case "berry" -> {
                         for (int i = 0; i < amount; i++) {
-                            //spawnBerry();
+                            spawnBerryBush(w);
                         }
                     }
                     case "" -> {
@@ -471,21 +576,46 @@ public class Tests {
                 }
 
             } else {
+                int amount = Integer.parseInt(input.get(name).getFirst());
+
+                int x = 0;
+                int y = 0;
+
+                if (input.get(name).size() == 3) {
+                    String coordinates = input.get(name).get(2);
+                    x = coordinates.charAt(1) - '0';
+                    y = coordinates.charAt(3) - '0';
+                }
+
                 switch (name) {
                     case "grass" -> {
-                        int j = Integer.parseInt(input.get(name).getFirst());
+                        int j = amount;
                         for (int i = 0; i < j; i++) {
                             spawnGrass(w);
                         }
                     }
                     case "rabbit" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name).getFirst()); i++) {
+                        for (int i = 0; i < amount; i++) {
                             spawnRabbit(w);
                         }
                     }
                     case "burrow" -> {
-                        for (int i = 0; i < Integer.parseInt(input.get(name).getFirst()); i++) {
+                        for (int i = 0; i < amount; i++) {
                             spawnHole(w);
+                        }
+                    }
+                    case "bear" -> {
+                        for (int i = 0; i < amount; i++) {
+                            spawnBear(w, new Location(x, y));
+                        }
+                    }
+                    case "wolf" -> {
+                        System.out.println("wolf");
+                        spawnWolf(w, amount);
+                    }
+                    case "berry" -> {
+                        for (int i = 0; i < amount; i++) {
+                            spawnBerryBush(w);
                         }
                     }
                 }
@@ -512,6 +642,19 @@ public class Tests {
         w.setTile(l, new RabbitHole(w));
     }
 
+    public static void spawnWolf(World w, int amount) {
+        Location l = blockingLocation(w);
+        new WolfPack(w, amount, l);
+    }
+
+    public static void spawnBear(World w, Location location) {
+        w.setTile(location, new Bear(w, location));
+    }
+
+    public static void spawnBerryBush(World w) {
+        w.setTile(blockingLocation(w), new BerryBush(w));
+    }
+
     // Find a location for a NonBlocking object
     public static Location nonBlockingLocation(World w) {
         return rLoc.getNonBlockingLocation(w.getSize());
@@ -522,19 +665,11 @@ public class Tests {
         return rLoc.getRandomLocation(w.getSize());
     }
 
-    //public static int getNonBlockingObjects() { return nonBlockingObjects; }
-
-    /*
-    public static void setNonBlockingObjects(int value) {           //"Change" the amount of grass in the world
-        nonBlockingObjects = value;
+    public static double avg(List<Integer> list) {
+        int sum = 0;
+        for (int i : list) {
+            sum += i;
+        }
+        return 1.0 * sum / list.size();
     }
-
-     */
-
-    /*
-    public static int getSize() {           //"Change" the amount of grass in the world
-        return size;
-    }
-
-     */
 }
