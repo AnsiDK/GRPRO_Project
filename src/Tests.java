@@ -13,6 +13,9 @@ import methodHelpers.RandomLocationHelper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * This class tests if the requirements of the assignment is fulfilled
+ */
 
 public class Tests {
     World w;
@@ -21,7 +24,9 @@ public class Tests {
     final static Random r = new Random();
     static RandomLocationHelper rLoc;
 
-
+    /**
+     * This method tests if grass will be placed when the input file requests it
+     */
     @Test
     public void Test11a () {
         CreateWorld("week-1/t1-1a.txt");
@@ -42,6 +47,9 @@ public class Tests {
         assertEquals(3, occupied);
     }
 
+    /**
+     * This test makes sure that grass can spread
+     */
     @Test
     public void Test11b () {
         CreateWorld("week-1/t1-1b.txt");
@@ -62,7 +70,9 @@ public class Tests {
         assertNotEquals(1, occupied);
     }
 
-    // test
+    /**
+     * This test makes sure that animals can walk on top of grass
+     */
     @Test
     public void Test11c () {
         CreateWorld("week-1/t1-1c.txt");
@@ -93,6 +103,9 @@ public class Tests {
         assertTrue(isOnGrass);
     }
 
+    /**
+     * This test makes sure that rabbits can be placed on the map when the input file specifies it
+     */
     @Test
     public void Test12a () {
         CreateWorld("week-1/t1-2a.txt");
@@ -110,6 +123,9 @@ public class Tests {
         assertEquals(1, occupied);
     }
 
+    /**
+     * This makes sure that when rabbits die, they get removed from the world
+     */
     @Test
     public void Test12b () {
         CreateWorld("week-1/t1-2b.txt");
@@ -149,6 +165,9 @@ public class Tests {
         assertTrue(isDead);
     }
 
+    /**
+     * This test makes sure that rabbits with less energy doesn't move as much
+     */
     @Test
     public void Test12d () {
         CreateWorld("week-1/t1-2a.txt");
@@ -206,6 +225,9 @@ public class Tests {
         assertTrue(isSlow);
     }
 
+    /**
+     * This tests that rabbits can reproduce
+     */
     @Test
     public void Test2e() {
         CreateWorld("week-1/t1-2e.txt");
@@ -253,6 +275,9 @@ public class Tests {
         assertTrue(reproduced);
     }
 
+    /**
+     * This tests that rabbits can dig holes
+     */
     @Test
     public void Test12f () {
         CreateWorld("week-1/t1-2fg.txt");
@@ -290,6 +315,9 @@ public class Tests {
         assertTrue(diggedHole);
     }
 
+    /**
+     * This tests that rabbits go towards their holes when it gets dark
+     */
     @Test
     public void Test12g () {
         CreateWorld("week-1/t1-2cde.txt");
@@ -341,6 +369,9 @@ public class Tests {
         assertTrue(goToHole);
     }
 
+    /**
+     * This tests that RabbitHoles can be placed when the input file specifies
+     */
     @Test
     public void Test13a () {
         CreateWorld("week-1/t1-3a.txt");
@@ -358,6 +389,9 @@ public class Tests {
         assertTrue(placedHole);
     }
 
+    /**
+     * This tests that anaimals can walk on top of RabbitHoles
+     */
     @Test
     public void Test13b () {
         CreateWorld("week-1/t1-3b.txt");
@@ -389,6 +423,9 @@ public class Tests {
         assertTrue(standOnHole);
     }
 
+    /**
+     * This tests that wolfs can be placed when the input file specifies
+     */
     @Test
     public void Test21a () {
         CreateWorld("week-2/t2-1ab.txt");
@@ -406,6 +443,9 @@ public class Tests {
         assertEquals(1, occupied);
     }
 
+    /**
+     * This tests that when wolfs die, they get removed from the world
+     */
     @Test
     public void Test21b () {
         CreateWorld("week-2/t2-1ab.txt");
@@ -445,6 +485,9 @@ public class Tests {
         assertTrue(isDead);
     }
 
+    /**
+     * This tests that the wolf will hunt other animals
+     */
     @Test
     public void Test21c () {
         CreateWorld("week-2/t2-1c.txt");
@@ -483,6 +526,9 @@ public class Tests {
         assertTrue(hunting);
     }
 
+    /**
+     * This tests that wolf will be walking together with other wolfs in their pack
+     */
     @Test
     public void Test22a () {
         CreateWorld("week-2/t2-2aa.txt");
@@ -512,6 +558,9 @@ public class Tests {
         assertTrue(flok);
     }
 
+    /**
+     * This tests that wolfs will dig a hole
+     */
     @Test
     public void Test23a () {
         CreateWorld("week-2/t2-3a.txt");
@@ -540,6 +589,9 @@ public class Tests {
         assertTrue(buildDen);
     }
 
+    /**
+     * This tests that bears will be placed when the input file specifies
+     */
     @Test
     public void Test24a () {
         CreateWorld("week-2/t2-4a.txt");
@@ -557,6 +609,9 @@ public class Tests {
         assertEquals(1, occupied);
     }
 
+    /**
+     * This tests that bears will hunt
+     */
     @Test
     public void Test24b () {
         CreateWorld("week-2/t2-4bb.txt");
@@ -585,6 +640,9 @@ public class Tests {
         assertTrue(hasEaten);
     }
 
+    /**
+     * This tests that bears have a territory
+     */
     @Test
     public void Test25a () {
         CreateWorld("week-2/t2-5a.txt");
@@ -609,6 +667,9 @@ public class Tests {
         assertTrue(hasTeretory);
     }
 
+    /**
+     * This tests that bears can eat berryBushes
+     */
     @Test
     public void Test26a () {
         CreateWorld("week-2/t2-6a.txt");
@@ -639,6 +700,9 @@ public class Tests {
         assertTrue(hasEaten);
     }
 
+    /**
+     * This tests that carcasses can be placed when the input file specifies
+     */
     @Test
     public void Test31a () {
         CreateWorld("week-3/t3-1a.txt");
@@ -656,6 +720,9 @@ public class Tests {
         assertEquals(1, occupied);
     }
 
+    /**
+     * This tests that animals will leave a carcass when they die
+     */
     @Test
     public void Test31b () {
         CreateWorld("week-3/t3-1b.txt");
@@ -686,6 +753,9 @@ public class Tests {
         assertTrue(madeCarcass);
     }
 
+    /**
+     * This tests that animals can eat carcasses
+     */
     @Test
     public void Test31bb () {
         CreateWorld("week-3/t3-1bb.txt");
@@ -714,6 +784,9 @@ public class Tests {
         assertTrue(hasEaten);
     }
 
+    /**
+     * This tests that carcasses will be removed when they at some point decay
+     */
     @Test
     public void Test31c () {
         CreateWorld("week-3/t3-1c.txt");
@@ -747,6 +820,9 @@ public class Tests {
         assertEquals(0, amount);
     }
 
+    /**
+     * This tests that carcasses can be placed with fungi when the input file specifies
+     */
     @Test
     public void Test32a () {
         CreateWorld("week-3/t3-2a.txt");
@@ -771,6 +847,9 @@ public class Tests {
         assertTrue(hasFungi);
     }
 
+    /**
+     * This tests that mushrooms will die if there is nowhere to spread
+     */
     @Test
     public void Test32ba () {
         CreateWorld("week-3/t3-2a.txt");
@@ -806,6 +885,10 @@ public class Tests {
         assertTrue(hasDied);
     }
 
+    /**
+     * This method creates a world
+     * @param filename is the name of the input file
+     */
     public void CreateWorld(String filename) {
         Map<String, ArrayList<String>> input = fileImport(filename);
 
@@ -829,6 +912,11 @@ public class Tests {
         }
     }
 
+    /**
+     * This function creates a Map with the different values from the input files
+     * @param fileName This is the name of the file that you want to import
+     * @return This returns a HashMap with keys as the name of the object and values as an ArrayList that has the values for that object
+     */
     public static Map<String, ArrayList<String>> fileImport(String fileName) {
 
         File file = new File(fileName);
@@ -857,6 +945,12 @@ public class Tests {
         }
     }
 
+    /**
+     * This function spawns the different objects
+     * @param name The name of the object
+     * @param input The Map with the values for the object
+     * @param w The world that you want to spawn the animal in
+     */
     public static void spawnStuff(String name, Map<String, ArrayList<String>> input, World w) {
         int amount = 0;
         String stringAmount = null;
@@ -945,35 +1039,61 @@ public class Tests {
     }
 
 
-    // Spawn some Grass
+    /**
+     * This spawns grass
+     * @param w The world that you want to spawn it in
+     */
     public static void spawnGrass(World w) {
         w.setTile(rLoc.getNonBlockingLocation(w.getSize()), new Grass(w));
     }
 
-    // Spawn a rabbit
+    /**
+     * This spawns Rabbits
+     * @param w The world that you want to spawn it in
+     */
     public static void spawnRabbit(World w) {
         w.setTile(blockingLocation(w), new Rabbit(w));
     }
 
-    // Spawn a RabbitHole
+    /**
+     * This spawns RabbitHoles
+     * @param w The world that you want to spawn it in
+     */
     public static void spawnHole(World w) {
         Location l = nonBlockingLocation(w);
         w.setTile(l, new RabbitHole(w));
     }
 
+    /**
+     * This spawns Wolfs
+     * @param w The world that you want to spawn it in
+     */
     public static void spawnWolf(World w, int amount) {
         Location l = blockingLocation(w);
         new WolfPack(w, amount, l);
     }
 
+    /**
+     * This spawns Bears
+     * @param w The world that you want to spawn it in
+     */
     public static void spawnBear(World w, Location location) {
         w.setTile(location, new Bear(w, location));
     }
 
+    /**
+     * This spawns BerryBushes
+     * @param w The world that you want to spawn it in
+     */
     public static void spawnBerryBush(World w) {
         w.setTile(blockingLocation(w), new BerryBush(w));
     }
 
+    /**
+     * This spawns carcasses
+     * @param w The world that you want to spawn it in
+     * @param fungi Does the carcass have fungi
+     */
     public static void spawnCarcass(World w, boolean fungi) {
         Location l = blockingLocation(w);
         Carcass carcass = new Carcass(w, 30, l);
@@ -983,16 +1103,29 @@ public class Tests {
         }
     }
 
-    // Find a location for a NonBlocking object
+    /**
+     * Finds a free location for a nonBlocking object
+     * @param w the World
+     * @return The free location
+     */
     public static Location nonBlockingLocation(World w) {
         return rLoc.getNonBlockingLocation(w.getSize());
     }
 
-    // Find a location for a Blocking object
+    /**
+     * Finds a free location for a blocing object
+     * @param w The world
+     * @return The free location
+     */
     public static Location blockingLocation(World w) {
         return rLoc.getRandomLocation(w.getSize());
     }
 
+    /**
+     * This finds the average in a list of integers
+     * @param list list of integers that you want to find the average of
+     * @return A double that is the average value
+     */
     public static double avg(List<Integer> list) {
         int sum = 0;
         for (int i : list) {

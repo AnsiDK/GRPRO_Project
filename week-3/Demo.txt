@@ -1,0 +1,6 @@
+10
+bear 1 (5, 7)
+wolf 3
+rabbit 20
+grass 5
+carcass 1
