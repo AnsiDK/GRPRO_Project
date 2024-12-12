@@ -106,4 +106,8 @@ public class Mushroom extends Foliage implements DynamicDisplayInformationProvid
             }
         }
     }
+
+    public int getEnergy() {
+        return energy;
+    }
 }

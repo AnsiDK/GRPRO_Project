@@ -99,6 +99,10 @@ public class Bear extends Animal {
         //Don't think the bear can reproduce
     }
 
+    public Location getTerritoryCenter() {
+        return territoryCenter;
+    }
+
     /**
      * Method for bears to search for food, this is done by using the "searcher" and looking for objects of certain classes within the bears territory
      */

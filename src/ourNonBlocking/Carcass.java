@@ -96,4 +96,16 @@ public class Carcass implements Actor, DynamicDisplayInformationProvider, NonBlo
     public int getEnergy() {
         return energy;
     }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public boolean hasFungi() {
+        return mushroom != null;
+    }
+
+    public Mushroom getMushroom() {
+        return mushroom;
+    }
 }

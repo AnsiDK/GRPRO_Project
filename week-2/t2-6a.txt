@@ -1,4 +1,4 @@
-15
+10
 bear 1 (8,4)
-grass 10-15
-berry 7-12
+grass 10
+berry 7-15

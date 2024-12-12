@@ -38,6 +38,7 @@ public abstract class Animal implements Actor, DynamicDisplayInformationProvider
         r = new Random();
         hasGrown = false;
         timeManager = new TimeManager(this);
+        energy = 25;
     }
 
     @Override

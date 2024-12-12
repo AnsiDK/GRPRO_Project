@@ -1,6 +1,6 @@
-25
+20
 bear 1
 grass 10-15
-rabbit 5-7
-wolf 2-4
+rabbit 15
+wolf 2
 bear 1

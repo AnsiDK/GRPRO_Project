@@ -75,7 +75,7 @@ public class BerryBush extends Foliage implements DynamicDisplayInformationProvi
     /**
      * A method that grows berries on our berry bushes
      */
-    protected void grow() {
+    public void grow() {
         if (hasBerries == false) {
             if (r.nextInt(5) == 0) {
                 hasBerries = true;
