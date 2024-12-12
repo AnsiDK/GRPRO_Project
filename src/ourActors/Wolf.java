@@ -1,5 +1,6 @@
 package ourActors;
 
+import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
@@ -9,6 +10,7 @@ import ourNonBlocking.Foliage;
 import ourNonBlocking.RabbitHole;
 import ourNonBlocking.WolfDen;
 
+import java.awt.*;
 import java.util.Random;
 
 public class Wolf extends Animal {
@@ -178,5 +180,22 @@ public class Wolf extends Animal {
 
     public void setHome(WolfDen home) {
         this.home = home;
+    }
+
+    @Override
+    public DisplayInformation getInformation() {
+        if (hasGrown) {
+            if (isPackLeader) {
+                return new DisplayInformation(Color.LIGHT_GRAY, "wolf-alpha");
+            } else {
+                return new DisplayInformation(Color.blue, "wolf");
+            }
+        } else {
+            if (isPackLeader) {
+                return new DisplayInformation(Color.LIGHT_GRAY, "wolf-small-alpha");
+            } else {
+                return new DisplayInformation(Color.red, "wolf-small");
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package ourActors;
 
 import Main.Main;
+import itumulator.executable.DisplayInformation;
 import ourNonBlocking.Carcass;
 import ourNonBlocking.Grass;
 import ourNonBlocking.Home;
@@ -9,6 +10,8 @@ import itumulator.world.World;
 import itumulator.world.Location;
 import methodHelpers.TimeManager;
 import methodHelpers.Searcher;
+
+import java.awt.*;
 import java.util.*;
 
 public class Rabbit extends Animal {
@@ -45,6 +48,8 @@ public class Rabbit extends Animal {
         searcher = new Searcher(world);
         r = new Random();
     }
+
+
 
     /**
      * Overridden method for rabbits to determine what to do during the day. This includes looking for grass, or just jumping around randomly
@@ -181,6 +186,15 @@ public class Rabbit extends Animal {
         if (o instanceof Grass) {
             eatGrass();
             setTarget(null);
+        }
+    }
+
+    @Override
+    public DisplayInformation getInformation() {
+        if (hasGrown) {
+            return new DisplayInformation(Color.red, "rabbit-small");
+        } else {
+            return new DisplayInformation(Color.blue, "rabbit");
         }
     }
 }

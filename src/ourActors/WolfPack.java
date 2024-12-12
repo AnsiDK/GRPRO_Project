@@ -1,11 +1,14 @@
 package ourActors;
 
+import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.RandomLocationHelper;
 import ourNonBlocking.WolfDen;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class WolfPack {
     private int wolfAmount;

@@ -1,6 +1,7 @@
 package ourActors;
 
 
+import itumulator.executable.DisplayInformation;
 import itumulator.world.Location;
 import itumulator.world.World;
 import methodHelpers.Searcher;
@@ -8,6 +9,7 @@ import ourNonBlocking.BerryBush;
 import ourNonBlocking.Carcass;
 import ourNonBlocking.Grass;
 
+import java.awt.*;
 import java.util.*;
 
 public class Bear extends Animal {
@@ -132,6 +134,23 @@ public class Bear extends Animal {
             BerryBush berryBush = (BerryBush) world.getTile(l);
             if (berryBush.getBerries()) {
                 setTarget(l);
+            }
+        }
+    }
+
+    @Override
+    public DisplayInformation getInformation() {
+        if (hasGrown) {
+            if (world.isDay()) {
+                return new DisplayInformation(Color.magenta, "bear");
+            } else {
+                return new DisplayInformation(Color.yellow, "bear-sleeping");
+            }
+        } else {
+            if (world.isDay()) {
+                return new DisplayInformation(Color.orange, "bear-small");
+            } else {
+                return new DisplayInformation(Color.green, "bear-small-sleeping");
             }
         }
     }
